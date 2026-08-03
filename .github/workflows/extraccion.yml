@@ -1,0 +1,42 @@
+name: Automatización de Cupos UNAM
+
+on:
+  schedule:
+    # Se ejecuta a los minutos 2, 17, 32 y 47 de cada hora 
+    # Entre las 15:00 y 01:00 UTC (09:00 a 19:00 CDMX)
+    # Los días 3, 4, 5 y 6 de agosto
+    - cron: '2,17,32,47 15-23,0-1 3-6 8 *'
+  workflow_dispatch:
+
+jobs:
+  extraccion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Crear carpeta y ejecutar scripts
+        run: |
+          mkdir -p Documentación
+          python extractorHor_HTML.py
+          mv datos_crudos.html Documentación/datos_crudos.html
+          python generador_csv.py
+
+      - name: Guardar cambios en el repositorio
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Documentación/matriz_cupos.csv
+          git commit -m "Actualización de cupos: $(date)" || echo "No hubo cambios para hacer commit"
+          git push
