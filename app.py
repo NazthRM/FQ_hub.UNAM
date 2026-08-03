@@ -1,6 +1,6 @@
 import streamlit as st
 # Importamos la lógica desde nuestro nuevo módulo
-from data_manager import cargar_horarios_indexados, cargar_historico_en_vivo
+from data_loader import cargar_horarios_indexados, cargar_historico_en_vivo
 
 st.set_page_config(page_title="FQ Hub", layout="wide", page_icon="🧪")
 
