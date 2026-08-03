@@ -1,0 +1,495 @@
+{
+    "carrera": "242021QUIMICA FARMACEUTICA BIOLOGICA",
+    "clave_carrera": "QFB",
+    "plan": "2021",
+    "semestres": {
+        "semestre_1": [
+            {
+                "clave": "1112",
+                "asignatura": "CIENCIA Y SOCIEDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "8000",
+                "asignatura": "LA UNIVERSID.ESPAC.LIBRE VIOL.GENERO",
+                "creditos": 0,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_2": [
+            {
+                "clave": "1206",
+                "asignatura": "ESTRUCTURA DE LA MATERIA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1209",
+                "asignatura": "FISICA II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1210",
+                "asignatura": "LABORATORIO DE FISICA",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1211",
+                "asignatura": "QUIMICA GENERAL II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1212",
+                "asignatura": "TERMODINAMICA",
+                "creditos": 11,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1214",
+                "asignatura": "BIOLOGIA CELULAR",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_3": [
+            {
+                "clave": "0164",
+                "asignatura": "FISIOLOGIA",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1307",
+                "asignatura": "ECUACIONES DIFERENCIALES",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1308",
+                "asignatura": "EQUILIBRIO Y CINETICA",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1310",
+                "asignatura": "QUIMICA INORGANICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1311",
+                "asignatura": "QUIMICA ORGANICA I",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_4": [
+            {
+                "clave": "1400",
+                "asignatura": "ESTADISTICA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1402",
+                "asignatura": "QUIMICA ANALITICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1408",
+                "asignatura": "FARMACOLOGIA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1410",
+                "asignatura": "MICROBIOLOGIA GENERAL",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1411",
+                "asignatura": "QUIMICA ORGANICA II",
+                "creditos": 9,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_5": [
+            {
+                "clave": "1500",
+                "asignatura": "FISIOLOGIA MICROBIANA",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1504",
+                "asignatura": "QUIMICA ANALITICA II",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1507",
+                "asignatura": "ANALITICA EXPERIMENTAL I",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1508",
+                "asignatura": "BIOQUIMICA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1509",
+                "asignatura": "FARMACOLOGIA II",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1515",
+                "asignatura": "MICROBIOLOGIA EXPERIMENTAL",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1521",
+                "asignatura": "QUIMICA ORGANICA III",
+                "creditos": 9,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_6": [
+            {
+                "clave": "1607",
+                "asignatura": "ANALITICA EXPERIMENTAL II",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1608",
+                "asignatura": "ATENCION FARMACEUTICA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1609",
+                "asignatura": "BACTERIOLOGIA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1610",
+                "asignatura": "BACTERIOLOGIA EXPERIMENTAL",
+                "creditos": 5,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1612",
+                "asignatura": "QUIMICA ANALITICA INSTRUMENTAL I",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1614",
+                "asignatura": "TOXICOLOGIA",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1630",
+                "asignatura": "GENETICA Y BIOLOGIA MOLECULAR",
+                "creditos": 8,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_7": [
+            {
+                "clave": "0141",
+                "asignatura": "BIOQUIMICA EXPERIMENTAL",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1705",
+                "asignatura": "ANALISIS DE MEDICAMENTOS",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1706",
+                "asignatura": "BIOFARMACIA",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1708",
+                "asignatura": "INMUNOLOGIA GENERAL",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1709",
+                "asignatura": "TECNOLOGIA FARMACEUTICA I",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_8": [
+            {
+                "clave": "0081",
+                "asignatura": "INTRODUCCION A LA GENOMICA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1806",
+                "asignatura": "ASEGURAMIENTO DE CALIDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1807",
+                "asignatura": "BIOQUIMICA CLINICA",
+                "creditos": 11,
+                "caracter": "semestre"
+            }
+        ]
+    },
+    "optativas": [
+        {
+            "clave": "0056",
+            "asignatura": "INTRODUCCION A LA QUIMIOINFORMATICA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0105",
+            "asignatura": "DESARROLLO ANALITICO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0106",
+            "asignatura": "DESARROLLO FARMACEUTICO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0107",
+            "asignatura": "FARMACOGNOSIA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0108",
+            "asignatura": "FISICOQUIMICA FARMACEUTICA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0109",
+            "asignatura": "INGENIERIA FARMACEUTICA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0110",
+            "asignatura": "QUÍMICA FARMACÉUTICA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0111",
+            "asignatura": "TECNOLOGIA FARMACEUTICA II",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0112",
+            "asignatura": "TECNOLOGIA FARMACEUTICA III",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0300",
+            "asignatura": "FITOTERAPIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0318",
+            "asignatura": "TECNOVIGILANCIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0360",
+            "asignatura": "METROLOGIA PARA QFB, S",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0057",
+            "asignatura": "INTRODUC AL ANALISIS BIOINFORMATICO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0113",
+            "asignatura": "APLICACIONES D BIOQUIMICA Y BIOLOGIA",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0114",
+            "asignatura": "BIOSINTESIS Y BIOTECNOLOGIA",
+            "creditos": 9,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0115",
+            "asignatura": "ENDOCRINOLOGIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0116",
+            "asignatura": "FISIOPATOLOGIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0117",
+            "asignatura": "HEMATOLOGIA",
+            "creditos": 9,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0118",
+            "asignatura": "INMUNOLOGIA APLICADA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0119",
+            "asignatura": "MICOLOGIA",
+            "creditos": 9,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0132",
+            "asignatura": "PARASITOLOGIA",
+            "creditos": 9,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0133",
+            "asignatura": "VIROLOGIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0134",
+            "asignatura": "ADMINISTRACION FARMACEUTICA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0135",
+            "asignatura": "FARMACOTERAPIA I",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0138",
+            "asignatura": "FARMACOVIGILANCIA",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0139",
+            "asignatura": "LEGISLACION FARMACEUTICA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        }
+    ],
+    "sociohumanisticas": [
+        {
+            "clave": "0028",
+            "asignatura": "INTRODUCCION A LOS ESTUDIOS D GENERO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0095",
+            "asignatura": "ECONOMIA Y SOCIEDAD",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0096",
+            "asignatura": "FILOSOFIA DE LA CIENCIA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0097",
+            "asignatura": "FUNDAMENTOS DE ADMINISTRACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0099",
+            "asignatura": "PENSAMIENTO Y APRENDIZAJE",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0100",
+            "asignatura": "PSICOLOGIA DEL TRABAJO HUMANO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0102",
+            "asignatura": "RELACIONES HUMANAS",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0103",
+            "asignatura": "TEORIA DE LA ORGANIZACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0277",
+            "asignatura": "HISTORIA Y FILOSOFIA DE LA QUIMICA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1089",
+            "asignatura": "CIENCIA Y ARTE I",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1090",
+            "asignatura": "CIENCIA Y ARTE II",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1914",
+            "asignatura": "DESARROLLO EMPRENDEDOR",
+            "creditos": 7,
+            "caracter": "sociohumanistica"
+        }
+    ]
+}

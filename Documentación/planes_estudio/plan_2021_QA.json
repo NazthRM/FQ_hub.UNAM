@@ -1,0 +1,489 @@
+{
+    "carrera": "282021QUIMICA DE ALIMENTOS",
+    "clave_carrera": "QA",
+    "plan": "2021",
+    "semestres": {
+        "semestre_1": [
+            {
+                "clave": "1112",
+                "asignatura": "CIENCIA Y SOCIEDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "8000",
+                "asignatura": "LA UNIVERSID.ESPAC.LIBRE VIOL.GENERO",
+                "creditos": 0,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_2": [
+            {
+                "clave": "1205",
+                "asignatura": "CALCULO II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1206",
+                "asignatura": "ESTRUCTURA DE LA MATERIA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1209",
+                "asignatura": "FISICA II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1210",
+                "asignatura": "LABORATORIO DE FISICA",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1211",
+                "asignatura": "QUIMICA GENERAL II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1212",
+                "asignatura": "TERMODINAMICA",
+                "creditos": 11,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_3": [
+            {
+                "clave": "1214",
+                "asignatura": "BIOLOGIA CELULAR",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1307",
+                "asignatura": "ECUACIONES DIFERENCIALES",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1308",
+                "asignatura": "EQUILIBRIO Y CINETICA",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1310",
+                "asignatura": "QUIMICA INORGANICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1311",
+                "asignatura": "QUIMICA ORGANICA I",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_4": [
+            {
+                "clave": "1400",
+                "asignatura": "ESTADISTICA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1402",
+                "asignatura": "QUIMICA ANALITICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1407",
+                "asignatura": "QUIMICA ORGANICA II",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1410",
+                "asignatura": "MICROBIOLOGIA GENERAL",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_5": [
+            {
+                "clave": "1504",
+                "asignatura": "QUIMICA ANALITICA II",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1507",
+                "asignatura": "ANALITICA EXPERIMENTAL I",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1508",
+                "asignatura": "BIOQUIMICA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1512",
+                "asignatura": "DISEÑO DE EXPERIMENTOS",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1514",
+                "asignatura": "FISICOQUIMICA DE ALIMENTOS",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1515",
+                "asignatura": "MICROBIOLOGIA EXPERIMENTAL",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1519",
+                "asignatura": "QUIMICA DE ALIMENTOS I",
+                "creditos": 8,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_6": [
+            {
+                "clave": "1607",
+                "asignatura": "ANALITICA EXPERIMENTAL II",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1612",
+                "asignatura": "QUIMICA ANALITICA INSTRUMENTAL I",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1618",
+                "asignatura": "LABORATORIO DE ALIMENTOS I",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1619",
+                "asignatura": "MICROBIOLOGIA DE ALIMENTOS",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1620",
+                "asignatura": "NUTRICION",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1628",
+                "asignatura": "QUIMICA ORGANICA III",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_7": [
+            {
+                "clave": "1711",
+                "asignatura": "CALIDAD",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1712",
+                "asignatura": "EVALUACION SENSORIAL",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1715",
+                "asignatura": "LABORATORIO DE ALIMENTOS II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1716",
+                "asignatura": "PROCESOS DE ALIMENTOS",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1722",
+                "asignatura": "QUIMICA DE ALIMENTOS II",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1724",
+                "asignatura": "QUIMICA DE ALIMENTOS III",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1727",
+                "asignatura": "TOXICOLOGIA DE ALIMENTOS",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_8": [
+            {
+                "clave": "1809",
+                "asignatura": "LAB. DE TECNOLOGIA DE ALIMENTOS",
+                "creditos": 20,
+                "caracter": "semestre"
+            }
+        ]
+    },
+    "optativas": [
+        {
+            "clave": "0081",
+            "asignatura": "INTRODUCCION A LA GENOMICA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0140",
+            "asignatura": "ALIMENTOS FERMENTADOS",
+            "creditos": 4,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0141",
+            "asignatura": "BIOQUIMICA EXPERIMENTAL",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0142",
+            "asignatura": "BIOTECNOLOGIA",
+            "creditos": 4,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0143",
+            "asignatura": "ENOLOGIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0144",
+            "asignatura": "GENETICA Y BIOLOGIA MOLECULAR",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0146",
+            "asignatura": "MALTA Y CERVEZA",
+            "creditos": 4,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0147",
+            "asignatura": "TECNOLOGIA ENZIMATICA",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0148",
+            "asignatura": "TECNOLOGIA DE FERMENTACIONES",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0199",
+            "asignatura": "NUTRIGENOMICA Y NUTRIGENETICA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0365",
+            "asignatura": "BIOTECNOL.ALIM.BIOSEGUR-BIOECONOMIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0156",
+            "asignatura": "INOCUIDAD ALIMENTARIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0158",
+            "asignatura": "TECNICAS AVANZADAS EN MICROBIOL.",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0167",
+            "asignatura": "CONFITERIA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0169",
+            "asignatura": "PANIFICACION",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0171",
+            "asignatura": "TECNOLOGIA DE CEREALES",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0172",
+            "asignatura": "TECNOLOGIA DE FRUTAS Y HORTALIZAS",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0173",
+            "asignatura": "TECNOLOGIA DE LACTEOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0177",
+            "asignatura": "PRODUCTOS CARNICOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0151",
+            "asignatura": "DESARROLLO DE NUEVOS PRODUCTOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0152",
+            "asignatura": "ENVASES PARA ALIMENTOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0153",
+            "asignatura": "FUNCIONALIDAD DE INGREDIENTES Y ADI",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0155",
+            "asignatura": "LEGISLACION Y NORMATIVIDAD",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0159",
+            "asignatura": "FACTORES TOXICOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0164",
+            "asignatura": "FISIOLOGIA",
+            "creditos": 9,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0165",
+            "asignatura": "NUTRICION HUMANA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0166",
+            "asignatura": "TOPICOS SELECTOS EN NUTRICION",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        }
+    ],
+    "sociohumanisticas": [
+        {
+            "clave": "0028",
+            "asignatura": "INTRODUCCION A LOS ESTUDIOS D GENERO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0095",
+            "asignatura": "ECONOMIA Y SOCIEDAD",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0096",
+            "asignatura": "FILOSOFIA DE LA CIENCIA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0097",
+            "asignatura": "FUNDAMENTOS DE ADMINISTRACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0099",
+            "asignatura": "PENSAMIENTO Y APRENDIZAJE",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0100",
+            "asignatura": "PSICOLOGIA DEL TRABAJO HUMANO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0102",
+            "asignatura": "RELACIONES HUMANAS",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0103",
+            "asignatura": "TEORIA DE LA ORGANIZACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0277",
+            "asignatura": "HISTORIA Y FILOSOFIA DE LA QUIMICA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1089",
+            "asignatura": "CIENCIA Y ARTE I",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1090",
+            "asignatura": "CIENCIA Y ARTE II",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1914",
+            "asignatura": "DESARROLLO EMPRENDEDOR",
+            "creditos": 7,
+            "caracter": "sociohumanistica"
+        }
+    ]
+}

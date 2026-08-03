@@ -1,0 +1,521 @@
+{
+    "carrera": "212021INGENIERIA QUIMICA",
+    "clave_carrera": "IQ",
+    "plan": "2021",
+    "semestres": {
+        "semestre_1": [
+            {
+                "clave": "1112",
+                "asignatura": "CIENCIA Y SOCIEDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "8000",
+                "asignatura": "LA UNIVERSID.ESPAC.LIBRE VIOL.GENERO",
+                "creditos": 0,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_2": [
+            {
+                "clave": "1205",
+                "asignatura": "CALCULO II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1206",
+                "asignatura": "ESTRUCTURA DE LA MATERIA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1209",
+                "asignatura": "FISICA II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1210",
+                "asignatura": "LABORATORIO DE FISICA",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1211",
+                "asignatura": "QUIMICA GENERAL II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1212",
+                "asignatura": "TERMODINAMICA",
+                "creditos": 11,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_3": [
+            {
+                "clave": "1307",
+                "asignatura": "ECUACIONES DIFERENCIALES",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1308",
+                "asignatura": "EQUILIBRIO Y CINETICA",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1310",
+                "asignatura": "QUIMICA INORGANICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1311",
+                "asignatura": "QUIMICA ORGANICA I",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1316",
+                "asignatura": "BALANCES DE MATERIA Y ENERGIA",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_4": [
+            {
+                "clave": "1400",
+                "asignatura": "ESTADISTICA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1402",
+                "asignatura": "QUIMICA ANALITICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1412",
+                "asignatura": "QUIMICA ORGANICA II",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1424",
+                "asignatura": "METODOS NUMERICOS",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1426",
+                "asignatura": "TERMODINAMICA QUIMICA",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1428",
+                "asignatura": "TRANSFERENCIA DE MOMENTUM",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_5": [
+            {
+                "clave": "0095",
+                "asignatura": "ECONOMIA Y SOCIEDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1538",
+                "asignatura": "CINETICA QUIMICA Y CATALISIS",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1540",
+                "asignatura": "ELECTROQUIMICA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1542",
+                "asignatura": "FENOMENOS DE SUPERFICIE",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1543",
+                "asignatura": "INGENIERIA DE FLUIDOS",
+                "creditos": 7,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1544",
+                "asignatura": "LABORATORIO DE INGENIERIA QUIMICA I",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1547",
+                "asignatura": "TRANSFERENCIA DE ENERGIA",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_6": [
+            {
+                "clave": "1640",
+                "asignatura": "INGENIERIA DE CALOR",
+                "creditos": 7,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1642",
+                "asignatura": "INGENIERIA DE REACTORES I",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1643",
+                "asignatura": "INGENIERIA ECONOMICA I",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1644",
+                "asignatura": "LABORATORIO UNIFICADO DE FISICOQUIMI",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1646",
+                "asignatura": "LABORATORIO DE INGENIERIA QUIMICA II",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1649",
+                "asignatura": "TRANSFERENCIA DE MASA",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_7": [
+            {
+                "clave": "1740",
+                "asignatura": "INGENIERIA DE REACTORES II",
+                "creditos": 7,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1742",
+                "asignatura": "INGENIERIA AMBIENTAL",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1743",
+                "asignatura": "INGENIERIA ECONOMICA II",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1749",
+                "asignatura": "LABORATORIO D INGENIERIA QUIMICA III",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1750",
+                "asignatura": "PROCESOS DE SEPARACION",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_8": [
+            {
+                "clave": "1817",
+                "asignatura": "DISEÑO DE PROCESOS",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1819",
+                "asignatura": "DINAMICA Y CONTROL DE PROCESOS",
+                "creditos": 7,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1823",
+                "asignatura": "LABORATORIO D INGENIERIA QUIMICA  IV",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1824",
+                "asignatura": "TALLER DE PROBLEMAS",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_9": [
+            {
+                "clave": "1912",
+                "asignatura": "INGENIERIA DE PROYECTOS",
+                "creditos": 7,
+                "caracter": "semestre"
+            }
+        ]
+    },
+    "optativas": [
+        {
+            "clave": "0142",
+            "asignatura": "BIOTECNOLOGIA",
+            "creditos": 4,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0147",
+            "asignatura": "TECNOLOGIA ENZIMATICA",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0198",
+            "asignatura": "FUNDAMENTOS BIOLOGIA CELULAR Y MOLEC",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0206",
+            "asignatura": "BIOQUIMICA GENERAL",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0218",
+            "asignatura": "INGENIERIA BIOQUIMICA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0222",
+            "asignatura": "LABORATORIO DE MICROBIOLOGIA",
+            "creditos": 4,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0254",
+            "asignatura": "MICROBIOLOGIA GENERAL",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0207",
+            "asignatura": "CATALISIS I",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0212",
+            "asignatura": "CATALISIS II",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0204",
+            "asignatura": "ADMINISTRACION DEL RIESGO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0205",
+            "asignatura": "ADMINISTRACION DE PROYECTOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0213",
+            "asignatura": "DISEÑO DE EQUIPO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0278",
+            "asignatura": "TERMODINAMICA APLICADA EN PROCESOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0219",
+            "asignatura": "INGENIERIA DE SISTEMAS I",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0220",
+            "asignatura": "INGENIERIA DE SISTEMAS II",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0256",
+            "asignatura": "MATEMATICAS APLICADAS I",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0265",
+            "asignatura": "MATEMATICAS APLICADAS II",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0267",
+            "asignatura": "MATEMATICAS APLICADAS III",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0200",
+            "asignatura": "GESTION SUSTENTABLE DE RESIDUOS PLAS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0221",
+            "asignatura": "INTRODUCCION A LA CIENCIA DE POLIMER",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0238",
+            "asignatura": "LABORATORIO DE POLIMEROS I",
+            "creditos": 3,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0272",
+            "asignatura": "MODELADO Y SIMULACION DE PROCESOS PO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0276",
+            "asignatura": "REOLOGIA Y PROCESAMIENTO DE POLIMERO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0273",
+            "asignatura": "PROTECCION AMBIENTAL I",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0274",
+            "asignatura": "PROTECCION AMBIENTAL II",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0275",
+            "asignatura": "PROTECCION AMBIENTAL III",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0214",
+            "asignatura": "ECONOMIA Y ADMINISTRACION I",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0215",
+            "asignatura": "ECONOMIA Y ADMINISTRACION II",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        }
+    ],
+    "sociohumanisticas": [
+        {
+            "clave": "0028",
+            "asignatura": "INTRODUCCION A LOS ESTUDIOS D GENERO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0095",
+            "asignatura": "ECONOMIA Y SOCIEDAD",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0096",
+            "asignatura": "FILOSOFIA DE LA CIENCIA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0097",
+            "asignatura": "FUNDAMENTOS DE ADMINISTRACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0099",
+            "asignatura": "PENSAMIENTO Y APRENDIZAJE",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0100",
+            "asignatura": "PSICOLOGIA DEL TRABAJO HUMANO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0102",
+            "asignatura": "RELACIONES HUMANAS",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0103",
+            "asignatura": "TEORIA DE LA ORGANIZACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0277",
+            "asignatura": "HISTORIA Y FILOSOFIA DE LA QUIMICA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1089",
+            "asignatura": "CIENCIA Y ARTE I",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1090",
+            "asignatura": "CIENCIA Y ARTE II",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1914",
+            "asignatura": "DESARROLLO EMPRENDEDOR",
+            "creditos": 7,
+            "caracter": "sociohumanistica"
+        }
+    ]
+}

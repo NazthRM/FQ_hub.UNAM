@@ -1,0 +1,419 @@
+{
+    "carrera": "222021INGENIERIA QUIMICA METALURGICA",
+    "clave_carrera": "IQM",
+    "plan": "2021",
+    "semestres": {
+        "semestre_1": [
+            {
+                "clave": "1112",
+                "asignatura": "CIENCIA Y SOCIEDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "8000",
+                "asignatura": "LA UNIVERSID.ESPAC.LIBRE VIOL.GENERO",
+                "creditos": 0,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_2": [
+            {
+                "clave": "1205",
+                "asignatura": "CALCULO II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1206",
+                "asignatura": "ESTRUCTURA DE LA MATERIA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1209",
+                "asignatura": "FISICA II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1210",
+                "asignatura": "LABORATORIO DE FISICA",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1211",
+                "asignatura": "QUIMICA GENERAL II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1212",
+                "asignatura": "TERMODINAMICA",
+                "creditos": 11,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_3": [
+            {
+                "clave": "1307",
+                "asignatura": "ECUACIONES DIFERENCIALES",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1308",
+                "asignatura": "EQUILIBRIO Y CINETICA",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1310",
+                "asignatura": "QUIMICA INORGANICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1311",
+                "asignatura": "QUIMICA ORGANICA I",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1314",
+                "asignatura": "FUNDAMENTOS DE METALURGIA Y MATERIAL",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1315",
+                "asignatura": "METALURGIA Y SOCIEDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_4": [
+            {
+                "clave": "1400",
+                "asignatura": "ESTADISTICA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1402",
+                "asignatura": "QUIMICA ANALITICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1419",
+                "asignatura": "EQUILIBRIO DE FASES EN METALURGIA Y",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1420",
+                "asignatura": "INTRODUCCION A LA CIENCIA E INGENIER",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1422",
+                "asignatura": "INTRODUC. A LA ING. DE PROCESOS META",
+                "creditos": 9,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_5": [
+            {
+                "clave": "1528",
+                "asignatura": "ANALISIS DE SISTEMAS REACCIONANTES E",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1530",
+                "asignatura": "BENEFICIO DE MINERALES",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1531",
+                "asignatura": "METALURGIA QUIMICA EXPERIMENTAL",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1532",
+                "asignatura": "TRANSFORMACIONES DE FASE",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1533",
+                "asignatura": "TRANSPORTE DE ENERGIA",
+                "creditos": 9,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_6": [
+            {
+                "clave": "1631",
+                "asignatura": "FUNDAMENTOS DE PROCESADO ELECTROMETA",
+                "creditos": 11,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1632",
+                "asignatura": "PIROMETALURGIA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1638",
+                "asignatura": "TRATAMIENTOS TERMICOS",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1639",
+                "asignatura": "TRANSPORTE DE MASA",
+                "creditos": 9,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_7": [
+            {
+                "clave": "1728",
+                "asignatura": "ANALISIS NUMERICO EN FENOMENOS DE TR",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1730",
+                "asignatura": "COMPORTAMIENTO MECANICO",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1731",
+                "asignatura": "CORROSION Y PROTECCION",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1732",
+                "asignatura": "HIDROMETALURGIA",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1736",
+                "asignatura": "INGENIERIA ECONOMICA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1739",
+                "asignatura": "SOLIDIFICACION",
+                "creditos": 4,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_8": [
+            {
+                "clave": "0097",
+                "asignatura": "FUNDAMENTOS DE ADMINISTRACION",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1810",
+                "asignatura": "CONFORMADO MECANICO",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1811",
+                "asignatura": "ELECTROMETALURGIA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1815",
+                "asignatura": "FUNDICION",
+                "creditos": 10,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1816",
+                "asignatura": "ING. DE PROCESOS METALURGICOS Y DE M",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_9": [
+            {
+                "clave": "1907",
+                "asignatura": "ANALISIS DE FALLAS",
+                "creditos": 7,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1908",
+                "asignatura": "INGENIERIA DE ALEACIONES",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1911",
+                "asignatura": "SIDERURGIA",
+                "creditos": 4,
+                "caracter": "semestre"
+            }
+        ]
+    },
+    "optativas": [
+        {
+            "clave": "0181",
+            "asignatura": "FLOTACION",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0180",
+            "asignatura": "CERAMICOS",
+            "creditos": 9,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0184",
+            "asignatura": "MATERIALES COMPUESTOS DE MATRIZ META",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0188",
+            "asignatura": "MICROSCOPIA DE BARRIDO ELECTRONICO",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0182",
+            "asignatura": "INTERPRETACION METALOGRAFICA",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0185",
+            "asignatura": "METALURGIA DE ALEACIONES COLADAS BAS",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0186",
+            "asignatura": "METALURGIA DE HIERROS COLADOS",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0187",
+            "asignatura": "METALURGIA DE POLVOS Y SOLDADURA",
+            "creditos": 9,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0178",
+            "asignatura": "ANALIS MAT D TRAB EXP EN ING D PROC",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0189",
+            "asignatura": "MODELADO FISICO D PROCESOS METALUGIC",
+            "creditos": 8,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0190",
+            "asignatura": "TECS SELECTAS P MODEL MAT EN ING D P",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        }
+    ],
+    "sociohumanisticas": [
+        {
+            "clave": "0028",
+            "asignatura": "INTRODUCCION A LOS ESTUDIOS D GENERO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0095",
+            "asignatura": "ECONOMIA Y SOCIEDAD",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0096",
+            "asignatura": "FILOSOFIA DE LA CIENCIA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0097",
+            "asignatura": "FUNDAMENTOS DE ADMINISTRACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0099",
+            "asignatura": "PENSAMIENTO Y APRENDIZAJE",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0100",
+            "asignatura": "PSICOLOGIA DEL TRABAJO HUMANO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0102",
+            "asignatura": "RELACIONES HUMANAS",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0103",
+            "asignatura": "TEORIA DE LA ORGANIZACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0277",
+            "asignatura": "HISTORIA Y FILOSOFIA DE LA QUIMICA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1089",
+            "asignatura": "CIENCIA Y ARTE I",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1090",
+            "asignatura": "CIENCIA Y ARTE II",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1914",
+            "asignatura": "DESARROLLO EMPRENDEDOR",
+            "creditos": 7,
+            "caracter": "sociohumanistica"
+        }
+    ]
+}

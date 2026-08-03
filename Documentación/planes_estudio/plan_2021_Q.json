@@ -1,0 +1,457 @@
+{
+    "carrera": "232021QUIMICA",
+    "clave_carrera": "Q",
+    "plan": "2021",
+    "semestres": {
+        "semestre_1": [
+            {
+                "clave": "1112",
+                "asignatura": "CIENCIA Y SOCIEDAD",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "8000",
+                "asignatura": "LA UNIVERSID.ESPAC.LIBRE VIOL.GENERO",
+                "creditos": 0,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_2": [
+            {
+                "clave": "1205",
+                "asignatura": "CALCULO II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1206",
+                "asignatura": "ESTRUCTURA DE LA MATERIA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1209",
+                "asignatura": "FISICA II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1210",
+                "asignatura": "LABORATORIO DE FISICA",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1211",
+                "asignatura": "QUIMICA GENERAL II",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1212",
+                "asignatura": "TERMODINAMICA",
+                "creditos": 11,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_3": [
+            {
+                "clave": "1307",
+                "asignatura": "ECUACIONES DIFERENCIALES",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1308",
+                "asignatura": "EQUILIBRIO Y CINETICA",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1309",
+                "asignatura": "FUNDAMENTOS DE ESPECTROSCOPIA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1310",
+                "asignatura": "QUIMICA INORGANICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1311",
+                "asignatura": "QUIMICA ORGANICA I",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_4": [
+            {
+                "clave": "1400",
+                "asignatura": "ESTADISTICA",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1401",
+                "asignatura": "FISICOQUIMICA DE IONICA Y ELECTRODIC",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1402",
+                "asignatura": "QUIMICA ANALITICA I",
+                "creditos": 9,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1404",
+                "asignatura": "QUIMICA CUANTICA I",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1413",
+                "asignatura": "QUIMICA ORGANICA II",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_5": [
+            {
+                "clave": "1502",
+                "asignatura": "FISICOQUIMICA DE INTERFASES",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1503",
+                "asignatura": "METROLOGIA",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1504",
+                "asignatura": "QUIMICA ANALITICA II",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1506",
+                "asignatura": "QUIMICA ORGANICA III",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_6": [
+            {
+                "clave": "1602",
+                "asignatura": "ANALITICA EXPERIMENTAL I",
+                "creditos": 4,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1603",
+                "asignatura": "CINETICA QUIMICA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1604",
+                "asignatura": "QUIMICA ANALITICA III",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1606",
+                "asignatura": "QUIMICA ORGANICA IV",
+                "creditos": 10,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_7": [
+            {
+                "clave": "0104",
+                "asignatura": "COMUNICACION CIENTIFICA",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1612",
+                "asignatura": "QUIMICA ANALITICA INSTRUMENTAL I",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1700",
+                "asignatura": "ANALITICA EXPERIMENTAL II",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1701",
+                "asignatura": "BIOQUIMICA GENERAL",
+                "creditos": 8,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1703",
+                "asignatura": "LABORATORIO UNIFICADO DE FISICOQUIMI",
+                "creditos": 8,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_8": [
+            {
+                "clave": "1802",
+                "asignatura": "ANALITICA EXPERIMENTAL III",
+                "creditos": 3,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1803",
+                "asignatura": "QUIMICA ANALITICA INSTRUMENTAL II",
+                "creditos": 6,
+                "caracter": "semestre"
+            },
+            {
+                "clave": "1804",
+                "asignatura": "SEMINARIO I",
+                "creditos": 8,
+                "caracter": "semestre"
+            }
+        ],
+        "semestre_9": [
+            {
+                "clave": "1903",
+                "asignatura": "SEMINARIO II",
+                "creditos": 6,
+                "caracter": "semestre"
+            }
+        ]
+    },
+    "optativas": [
+        {
+            "clave": "0030",
+            "asignatura": "BIOSINTESIS MICROBIANA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0033",
+            "asignatura": "QUIMICA AMBIENTAL",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0034",
+            "asignatura": "QUIMICA BIOINORGANICA",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0039",
+            "asignatura": "QUIMICA DE DISPOSITIVOS DEL EDO. SOL",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0067",
+            "asignatura": "QUIMICA ORGANICA V",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0068",
+            "asignatura": "SINTESIS DE MATERIALES",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0069",
+            "asignatura": "TECNICAS DE ANALISIS DE SOLIDOS",
+            "creditos": 10,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0081",
+            "asignatura": "INTRODUCCION A LA GENOMICA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0074",
+            "asignatura": "ESPECTROSCOPIA APLICADA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0075",
+            "asignatura": "EQUILIBRIO DE ECOSISTEMAS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0089",
+            "asignatura": "RECURSOS NATURALES",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0091",
+            "asignatura": "SINTESIS DE CERAMICOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0145",
+            "asignatura": "CATALISIS COMPUESTOS METAL FASE HOMO",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0077",
+            "asignatura": "FISICOQUIMICA DE MEZCLAS LIQUIDAS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0083",
+            "asignatura": "INTRODUCCION A LA SIMULACION MOLECUL",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0084",
+            "asignatura": "INTRODUCCION A LA TERMODINAMICA ESTA",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0087",
+            "asignatura": "PROPIEDADES FISICAS DE LOS SOLIDOS",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0088",
+            "asignatura": "QUIMICA COMPUTACIONAL",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0085",
+            "asignatura": "OPTIMIZACION Y PROCESOS D SINT I",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        },
+        {
+            "clave": "0073",
+            "asignatura": "CONSTRUCTIVISMO Y ENSEÑANZA DE LA CI",
+            "creditos": 6,
+            "caracter": "disciplinaria"
+        }
+    ],
+    "sociohumanisticas": [
+        {
+            "clave": "0028",
+            "asignatura": "INTRODUCCION A LOS ESTUDIOS D GENERO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0095",
+            "asignatura": "ECONOMIA Y SOCIEDAD",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0096",
+            "asignatura": "FILOSOFIA DE LA CIENCIA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0097",
+            "asignatura": "FUNDAMENTOS DE ADMINISTRACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0099",
+            "asignatura": "PENSAMIENTO Y APRENDIZAJE",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0100",
+            "asignatura": "PSICOLOGIA DEL TRABAJO HUMANO",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0102",
+            "asignatura": "RELACIONES HUMANAS",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0103",
+            "asignatura": "TEORIA DE LA ORGANIZACION",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "0277",
+            "asignatura": "HISTORIA Y FILOSOFIA DE LA QUIMICA",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1089",
+            "asignatura": "CIENCIA Y ARTE I",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1090",
+            "asignatura": "CIENCIA Y ARTE II",
+            "creditos": 6,
+            "caracter": "sociohumanistica"
+        },
+        {
+            "clave": "1914",
+            "asignatura": "DESARROLLO EMPRENDEDOR",
+            "creditos": 7,
+            "caracter": "sociohumanistica"
+        }
+    ],
+    "obligatorias_eleccion_inorganica": [
+        {
+            "clave": "1414",
+            "asignatura": "QUIMICA DEL ESTADO SOLIDO",
+            "creditos": 9,
+            "caracter": "inorgánicas de elección"
+        },
+        {
+            "clave": "1510",
+            "asignatura": "QUIMICA COVALENTE",
+            "creditos": 9,
+            "caracter": "inorgánicas de elección"
+        },
+        {
+            "clave": "1622",
+            "asignatura": "QUIMICA DE COORDINACION",
+            "creditos": 9,
+            "caracter": "inorgánicas de elección"
+        },
+        {
+            "clave": "1624",
+            "asignatura": "QUIMICA ORGANOMETALICA",
+            "creditos": 9,
+            "caracter": "inorgánicas de elección"
+        }
+    ]
+}
