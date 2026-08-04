@@ -1,12 +1,16 @@
-import streamlit as st
+import datetime
 import pandas as pd
+import streamlit as st
 
-# Importamos la nueva función fusionadora
+# Carga de datos desde data_loader
 from data_loader import (
-    cargar_horarios_indexados,
     cargar_historico_en_vivo,
+    cargar_horarios_indexados,
     obtener_datos_fusionados,
 )
+
+# Importamos el motor predictivo
+from predictor import proyectar_supervivencia_hibrida
 
 st.set_page_config(page_title="FQ Hub", layout="wide", page_icon="🧪")
 
@@ -31,11 +35,11 @@ with st.sidebar:
     st.metric(label="Grupos guardados", value=len(st.session_state.grupos_guardados))
 
 # ==========================================
-# 2. CARGA DE DATOS (Delegada 100% al loader)
+# 2. CARGA DE DATOS
 # ==========================================
 df_horarios, df_relaciones = cargar_horarios_indexados()
 df_historico = cargar_historico_en_vivo()
-df_fusionado = obtener_datos_fusionados()  # <--- Nuestro nuevo motor de datos
+df_fusionado = obtener_datos_fusionados()
 
 # ==========================================
 # 3. ÁREA PRINCIPAL
@@ -57,21 +61,24 @@ else:
             "Filtra por plan de estudios, semestre y carácter, o busca directamente."
         )
 
-        carreras_disponibles = sorted(
-            [c for c in df_relaciones["Carrera"].unique() if c != "Tronco Común"]
+        carreras_disponibles = ["Todas las carreras"] + sorted(
+            [
+                c
+                for c in df_relaciones["Carrera"].unique()
+                if c not in ["Tronco Común", "Desconocida"]
+            ]
         )
-        filtro_carrera = st.multiselect(
+        filtro_carrera = st.selectbox(
             "1. Plan de Estudios (Carrera):", options=carreras_disponibles
         )
 
         relaciones_filtradas = df_relaciones.copy()
-        if filtro_carrera:
-            carreras_validas = set(filtro_carrera) | {"Tronco Común"}
+        if filtro_carrera != "Todas las carreras":
+            carreras_validas = {filtro_carrera, "Tronco Común"}
             relaciones_filtradas = relaciones_filtradas[
                 relaciones_filtradas["Carrera"].isin(carreras_validas)
             ]
 
-        # Limpiamos la extracción de semestres
         semestres_disponibles = sorted(
             [s for s in relaciones_filtradas["Semestre"].unique() if s != "N/A"],
             key=int,
@@ -83,29 +90,16 @@ else:
             filtro_semestre = st.multiselect(
                 "2. Semestre:", options=semestres_disponibles
             )
-            # Agregamos un switch elegante en lugar de forzar la lógica en el backend
-            incluir_optativas = st.checkbox(
-                "Incluir materias sin semestre fijo (Optativas/Sociohumanísticas)",
-                value=True,
-            )
-
         with col_f2:
             filtro_caracter = st.multiselect(
-                "3. Carácter / Tipo:", options=caracteres_disponibles
+                "3. Carácter:", options=caracteres_disponibles
             )
 
-        # Lógica de filtrado limpia y sin cadenas de texto forzadas (Hardcoding)
         if filtro_semestre:
-            if incluir_optativas:
-                # Muestra los semestres elegidos O los que no tienen semestre ("N/A")
-                relaciones_filtradas = relaciones_filtradas[
-                    (relaciones_filtradas["Semestre"].isin(filtro_semestre))
-                    | (relaciones_filtradas["Semestre"] == "N/A")
-                ]
-            else:
-                relaciones_filtradas = relaciones_filtradas[
-                    relaciones_filtradas["Semestre"].isin(filtro_semestre)
-                ]
+            relaciones_filtradas = relaciones_filtradas[
+                (relaciones_filtradas["Semestre"].isin(filtro_semestre))
+                | (relaciones_filtradas["Semestre"] == "N/A")
+            ]
 
         if filtro_caracter:
             relaciones_filtradas = relaciones_filtradas[
@@ -136,10 +130,15 @@ else:
             ]
 
         mostrar_tabla = True
-        if filtro_carrera and not filtro_materia and not filtro_profesor:
+        if (
+            filtro_carrera != "Todas las carreras"
+            and not filtro_materia
+            and not filtro_profesor
+            and not filtro_semestre
+        ):
             mostrar_tabla = False
             st.info(
-                "Selecciona al menos una asignatura o ingresa un nombre de profesor para desplegar los grupos."
+                "Selecciona un semestre, asignatura o ingresa un nombre de profesor para desplegar los grupos."
             )
 
         if mostrar_tabla:
@@ -211,12 +210,45 @@ else:
             df_guardados = df_horarios[
                 df_horarios["ID Único"].isin(st.session_state.grupos_guardados)
             ].copy()
+
+            # Cruzar con la telemetría en vivo para mostrar el cupo actual
+            if not df_historico.empty and "id_unico" in df_historico.columns:
+                df_ultimos_cupos = (
+                    df_historico.sort_values("Fecha_Hora_Extraccion")
+                    .groupby("id_unico")
+                    .last()
+                    .reset_index()
+                )
+                col_cupo = (
+                    "cupo"
+                    if "cupo" in df_ultimos_cupos.columns
+                    else df_ultimos_cupos.columns[-1]
+                )
+                df_ultimos_cupos["Cupo Actual"] = (
+                    df_ultimos_cupos[col_cupo]
+                    .astype(str)
+                    .str.replace("%", "")
+                    .str.strip()
+                    + "%"
+                )
+                df_guardados = pd.merge(
+                    df_guardados,
+                    df_ultimos_cupos[["id_unico", "Cupo Actual"]],
+                    left_on="ID Único",
+                    right_on="id_unico",
+                    how="left",
+                )
+                df_guardados["Cupo Actual"] = df_guardados["Cupo Actual"].fillna("100%")
+            else:
+                df_guardados["Cupo Actual"] = "100%"
+
             cols_resumen = [
                 "ID Único",
                 "Clave",
                 "Asignatura",
                 "Grupo",
                 "Tipo",
+                "Cupo Actual",
                 "Profesores",
                 "Horarios",
             ]
@@ -233,19 +265,76 @@ else:
 
             col_d, col_h = st.columns(2)
             with col_d:
-                dia_turno = st.date_input("Día asignado:")
+                dia_turno = st.date_input(
+                    "Día asignado:",
+                    value=datetime.date(2026, 8, 3),
+                    min_value=datetime.date(2026, 8, 3),
+                    max_value=datetime.date(2026, 8, 6),
+                )
+
             with col_h:
-                hora_turno = st.time_input("Hora asignada (CDMX):")
+                # Opciones de horario exacto cada 10 minutos (09:00 a 19:00 hrs)
+                horas_opciones = []
+                for h in range(9, 20):
+                    for m in (0, 10, 20, 30, 40, 50):
+                        if h == 19 and m > 0:
+                            break
+                        horas_opciones.append(datetime.time(h, m))
+
+                hora_turno = st.selectbox(
+                    "Hora asignada (CDMX):",
+                    options=horas_opciones,
+                    format_func=lambda t: t.strftime("%H:%M hrs"),
+                )
 
             if st.button(
                 "🔮 Calcular probabilidad de cupo",
                 type="primary",
                 use_container_width=True,
             ):
-                st.info(
-                    f"Calculando predicción para el {dia_turno} a las {hora_turno}... (Algoritmo en construcción)"
+                fecha_turno_dt = datetime.datetime.combine(dia_turno, hora_turno)
+                st.write(
+                    f"### 📊 Proyección al {fecha_turno_dt.strftime('%d/%m/%Y %H:%M hrs')}"
                 )
-                # Aquí irá nuestra conexión con predictor.py
+
+                for _, materia in df_guardados.iterrows():
+                    id_unico = materia["ID Único"]
+
+                    prediccion = proyectar_supervivencia_hibrida(
+                        id_unico=id_unico,
+                        fecha_turno=fecha_turno_dt,
+                        df_historico=df_historico,
+                        df_horarios=df_horarios,
+                        df_relaciones=df_relaciones,
+                    )
+
+                    with st.expander(
+                        f"📌 {materia['Asignatura']} | Grupo {materia['Grupo']} ({materia['Tipo']})",
+                        expanded=True,
+                    ):
+                        c1, c2, c3 = st.columns(3)
+                        c1.metric(
+                            "Disponibilidad Estimada",
+                            f"{prediccion['disponibilidad_estimada_pct']}%",
+                        )
+                        c2.metric(
+                            "Probabilidad de Cierre",
+                            f"{int(prediccion['probabilidad_cierre'] * 100)}%",
+                        )
+
+                        tendencia_str = prediccion["tendencia"]
+                        if "Acelerando" in tendencia_str:
+                            c3.error(f"⚠️ {tendencia_str}")
+                        elif "Desacelerando" in tendencia_str:
+                            c3.info(f"ℹ️ {tendencia_str}")
+                        else:
+                            c3.success(f"✅ {tendencia_str}")
+
+                        st.caption(
+                            f"⚙️ **Metadatos:** {prediccion['mediciones_usadas']} lectura(s) histórica(s) | "
+                            f"Factor Multicarrera: `{prediccion['factores']['alpha_carreras']}x` | "
+                            f"Presión Demográfica: `{prediccion['factores']['alpha_presion']}x`"
+                        )
 
             st.divider()
             if st.button("Limpiar todos los grupos guardados", type="secondary"):
