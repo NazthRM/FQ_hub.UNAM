@@ -4,7 +4,7 @@ import os
 import streamlit as st
 
 # URL Raw de GitHub para la matriz de cupos en vivo
-URL_RAW_CUPOS = "https://raw.githubusercontent.com/NazthRM/rastreocuposfq/main/Documentaci%C3%B3n/matriz_cupos.csv"
+URL_RAW_CUPOS = "https://raw.githubusercontent.com/NazthRM/FQ_hub.UNAM/refs/heads/main/Documentación/matriz_cupos.csv"
 
 
 @st.cache_data
