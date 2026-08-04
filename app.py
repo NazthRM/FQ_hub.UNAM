@@ -363,11 +363,17 @@ else:
                         else:
                             c3.success(f"✅ {tendencia_str}")
 
+                        # ✅ CÓDIGO CORREGIDO Y SEGURO:
+                        factores = prediccion.get("factores", {})
+                        alpha_c = factores.get("alpha_carreras", 1.0)
+                        alpha_p = factores.get("alpha_presion", 1.0)
+                        factor_d = factores.get("factor_desborde", 1.0)
+
                         st.caption(
                             f"⚙️ **Metadatos:** {prediccion['mediciones_usadas']} lectura(s) histórica(s) | "
-                            f"Multicarrera: `{prediccion['factores']['alpha_carreras']}x` | "
-                            f"Presión Demográfica: `{prediccion['factores']['alpha_presion']}x` | "
-                            f"Factor Desborde: `{prediccion['factores']['factor_desborde']}x`"
+                            f"Multicarrera: `{alpha_c}x` | "
+                            f"Presión Demográfica: `{alpha_p}x` | "
+                            f"Factor Desborde: `{factor_d}x`"
                         )
 
             st.divider()
