@@ -2,28 +2,28 @@ import datetime
 import pandas as pd
 import streamlit as st
 
-# Carga de datos desde data_loader
 from data_loader import (
     cargar_historico_en_vivo,
     cargar_horarios_indexados,
     obtener_datos_fusionados,
 )
-
-# Importamos el motor predictivo
 from predictor import proyectar_supervivencia_hibrida
 
 st.set_page_config(page_title="FQ Hub", layout="wide", page_icon="🧪")
 
 # ==========================================
-# 0. INICIALIZACIÓN DE MEMORIA (SESSION STATE)
+# 0. INICIALIZACIÓN DE MEMORIA
 # ==========================================
 if "grupos_guardados" not in st.session_state:
     st.session_state.grupos_guardados = set()
 elif isinstance(st.session_state.grupos_guardados, list):
     st.session_state.grupos_guardados = set(st.session_state.grupos_guardados)
 
+if "carrera_seleccionada" not in st.session_state:
+    st.session_state.carrera_seleccionada = "Todas las carreras"
+
 # ==========================================
-# 1. BARRA LATERAL (CONFIGURACIÓN)
+# 1. BARRA LATERAL
 # ==========================================
 with st.sidebar:
     st.title("Hub de herramientas")
@@ -61,20 +61,43 @@ else:
             "Filtra por plan de estudios, semestre y carácter, o busca directamente."
         )
 
-        carreras_disponibles = ["Todas las carreras"] + sorted(
-            [
-                c
-                for c in df_relaciones["Carrera"].unique()
-                if c not in ["Tronco Común", "Desconocida"]
-            ]
-        )
-        filtro_carrera = st.selectbox(
-            "1. Plan de Estudios (Carrera):", options=carreras_disponibles
-        )
+        # GRID 2 FILAS x 3 COLUMNAS PARA SELECCIÓN DE CARRERA
+        st.markdown("**1. Plan de Estudios (Carrera):**")
+        carreras_lista = [
+            "Química Farmacéutico Biológica",
+            "Ingeniería Química",
+            "Química",
+            "Química de Alimentos",
+            "Ingeniería Química Metalúrgica",
+            "Química e Ingeniería en Materiales",
+        ]
 
+        row1_c1, row1_c2, row1_c3 = st.columns(3)
+        row2_c1, row2_c2, row2_c3 = st.columns(3)
+        cols_grid = [row1_c1, row1_c2, row1_c3, row2_c1, row2_c2, row2_c3]
+
+        for idx, c_nom in enumerate(carreras_lista):
+            activo = st.session_state.carrera_seleccionada == c_nom
+            label_btn = f"{'🟢' if activo else '⚪'} {c_nom}"
+            if cols_grid[idx].button(
+                label_btn, key=f"btn_carrera_{idx}", use_container_width=True
+            ):
+                st.session_state.carrera_seleccionada = c_nom
+                st.rerun()
+
+        todas_activo = st.session_state.carrera_seleccionada == "Todas las carreras"
+        if st.button(
+            f"{'🟢' if todas_activo else '⚪'} Mostrar todas las carreras",
+            key="btn_todas_carreras",
+            use_container_width=True,
+        ):
+            st.session_state.carrera_seleccionada = "Todas las carreras"
+            st.rerun()
+
+        # Filtrado base por carrera
         relaciones_filtradas = df_relaciones.copy()
-        if filtro_carrera != "Todas las carreras":
-            carreras_validas = {filtro_carrera, "Tronco Común"}
+        if st.session_state.carrera_seleccionada != "Todas las carreras":
+            carreras_validas = {st.session_state.carrera_seleccionada, "Tronco Común"}
             relaciones_filtradas = relaciones_filtradas[
                 relaciones_filtradas["Carrera"].isin(carreras_validas)
             ]
@@ -83,8 +106,11 @@ else:
             [s for s in relaciones_filtradas["Semestre"].unique() if s != "N/A"],
             key=int,
         )
-        caracteres_disponibles = sorted(relaciones_filtradas["Caracter"].unique())
+        caracteres_disponibles = sorted(
+            [c for c in relaciones_filtradas["Caracter"].unique() if c != "Desconocido"]
+        )
 
+        st.divider()
         col_f1, col_f2 = st.columns(2)
         with col_f1:
             filtro_semestre = st.multiselect(
@@ -95,16 +121,24 @@ else:
                 "3. Carácter:", options=caracteres_disponibles
             )
 
-        if filtro_semestre:
-            relaciones_filtradas = relaciones_filtradas[
-                (relaciones_filtradas["Semestre"].isin(filtro_semestre))
-                | (relaciones_filtradas["Semestre"] == "N/A")
-            ]
+        # LÓGICA DE FILTRADO ADITIVA (UNIÓN NO RESTRICTIVA)
+        cond_semestre = (
+            relaciones_filtradas["Semestre"].isin(filtro_semestre)
+            if filtro_semestre
+            else pd.Series(False, index=relaciones_filtradas.index)
+        )
+        cond_caracter = (
+            relaciones_filtradas["Caracter"].isin(filtro_caracter)
+            if filtro_caracter
+            else pd.Series(False, index=relaciones_filtradas.index)
+        )
 
-        if filtro_caracter:
-            relaciones_filtradas = relaciones_filtradas[
-                relaciones_filtradas["Caracter"].isin(filtro_caracter)
-            ]
+        if filtro_semestre and filtro_caracter:
+            relaciones_filtradas = relaciones_filtradas[cond_semestre | cond_caracter]
+        elif filtro_semestre:
+            relaciones_filtradas = relaciones_filtradas[cond_semestre]
+        elif filtro_caracter:
+            relaciones_filtradas = relaciones_filtradas[cond_caracter]
 
         ids_validos = relaciones_filtradas["ID Único"].unique()
         df_filtrado = df_horarios[df_horarios["ID Único"].isin(ids_validos)].copy()
@@ -131,14 +165,15 @@ else:
 
         mostrar_tabla = True
         if (
-            filtro_carrera != "Todas las carreras"
+            st.session_state.carrera_seleccionada != "Todas las carreras"
             and not filtro_materia
             and not filtro_profesor
             and not filtro_semestre
+            and not filtro_caracter
         ):
             mostrar_tabla = False
             st.info(
-                "Selecciona un semestre, asignatura o ingresa un nombre de profesor para desplegar los grupos."
+                "Selecciona un semestre, carácter, asignatura o ingresa un nombre de profesor para desplegar los grupos."
             )
 
         if mostrar_tabla:
@@ -211,7 +246,6 @@ else:
                 df_horarios["ID Único"].isin(st.session_state.grupos_guardados)
             ].copy()
 
-            # Cruzar con la telemetría en vivo para mostrar el cupo actual
             if not df_historico.empty and "id_unico" in df_historico.columns:
                 df_ultimos_cupos = (
                     df_historico.sort_values("Fecha_Hora_Extraccion")
@@ -273,7 +307,6 @@ else:
                 )
 
             with col_h:
-                # Opciones de horario exacto cada 10 minutos (09:00 a 19:00 hrs)
                 horas_opciones = []
                 for h in range(9, 20):
                     for m in (0, 10, 20, 30, 40, 50):
@@ -332,8 +365,9 @@ else:
 
                         st.caption(
                             f"⚙️ **Metadatos:** {prediccion['mediciones_usadas']} lectura(s) histórica(s) | "
-                            f"Factor Multicarrera: `{prediccion['factores']['alpha_carreras']}x` | "
-                            f"Presión Demográfica: `{prediccion['factores']['alpha_presion']}x`"
+                            f"Multicarrera: `{prediccion['factores']['alpha_carreras']}x` | "
+                            f"Presión Demográfica: `{prediccion['factores']['alpha_presion']}x` | "
+                            f"Factor Desborde: `{prediccion['factores']['factor_desborde']}x`"
                         )
 
             st.divider()
