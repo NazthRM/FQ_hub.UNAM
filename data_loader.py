@@ -27,7 +27,7 @@ def cargar_mapa_planes():
     nombres_carreras = {
         "Q": "Química",
         "IQ": "Ingeniería Química",
-        "IQA": "Ingeniería Química Metalúrgica",
+        "IQM": "Ingeniería Química Metalúrgica",
         "QA": "Química de Alimentos",
         "QFB": "Química Farmacéutico Biológica",
         "QIM": "Química e Ingeniería en Materiales",
