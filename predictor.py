@@ -16,10 +16,8 @@ def proyectar_supervivencia_hibrida(
     id_unico, fecha_turno, df_historico, df_horarios, df_relaciones
 ):
     """
-    Evalúa la disponibilidad estimada usando:
-    1. Demografía de carreras e índice de presión.
-    2. Inercia de velocidad reciente en telemetría.
-    3. Transferencia de demanda desde grupos hermanos saturados.
+    Evalúa la disponibilidad estimada garantizando monotonía (no rebote parabólico)
+    y corte inmediato para grupos ya saturados.
     """
     alumnos_totales_fq = sum(POBLACION_ALUMNOS.values())
     grupos_totales_fq = max(1, df_horarios["ID Único"].nunique())
@@ -100,26 +98,43 @@ def proyectar_supervivencia_hibrida(
             if len(cupos_num) > 1:
                 grupos_llenos = (cupos_num <= 10.0).sum()
                 pct_llenos = grupos_llenos / len(cupos_num)
-                # Si el 50%+ de los grupos hermanos están llenos, se acelera el desborde al rezagado
                 factor_desborde = 1.0 + (0.5 * pct_llenos)
 
     # ---------------------------------------------------------
-    # FASE D: PROYECCIÓN TEMPORAL
+    # FASE D: PROYECCIÓN TEMPORAL CON CANDADOS DE MONOTONÍA
     # ---------------------------------------------------------
+    # Extraer último cupo real registrado
+    cupo_ultimo_registrado = 100.0
+    if not df_grupo.empty and col_cupo:
+        s_cupo_last = str(df_grupo[col_cupo].iloc[-1]).replace("%", "").strip()
+        cupo_ultimo_registrado = float(
+            pd.to_numeric(s_cupo_last, errors="coerce") or 0.0
+        )
+
+    # 🛑 REGLA 1: SI EL GRUPO YA ESTÁ LLENO (0%), NUNCA REBOTA
+    if cupo_ultimo_registrado <= 0.0:
+        return {
+            "disponibilidad_estimada_pct": 0.0,
+            "probabilidad_cierre": 1.0,
+            "tendencia": "Grupo Agotado (Lleno Total)",
+            "mediciones_usadas": num_mediciones,
+            "factores": {
+                "alpha_carreras": round(alpha_carreras, 2),
+                "alpha_presion": round(alpha_presion, 2),
+                "factor_desborde": round(factor_desborde, 2),
+            },
+        }
+
+    # PROYECCIÓN PARA GRUPOS CON CUPO DISPONIBLE
     if num_mediciones < 3:
-        # Arranque en frío con velocidad teórica modulada por desborde
-        v_base = 2.0  # % por hora
+        v_base = 2.0
         v_efectiva = v_base * alpha_carreras * alpha_presion * factor_desborde
 
-        if not df_grupo.empty:
-            t_ultima_lectura = df_grupo["Fecha_Hora_Extraccion"].iloc[-1]
-            cupo_ultimo = pd.to_numeric(
-                df_grupo[col_cupo].astype(str).str.replace("%", "").str.strip(),
-                errors="coerce",
-            ).iloc[-1]
-        else:
-            t_ultima_lectura = datetime.datetime(2026, 8, 3, 9, 0)
-            cupo_ultimo = 100.0
+        t_ultima_lectura = (
+            df_grupo["Fecha_Hora_Extraccion"].iloc[-1]
+            if not df_grupo.empty
+            else datetime.datetime(2026, 8, 3, 9, 0)
+        )
 
         if isinstance(fecha_turno, datetime.datetime):
             horas_hasta_turno = max(
@@ -128,12 +143,13 @@ def proyectar_supervivencia_hibrida(
         else:
             horas_hasta_turno = 0.0
 
-        disp_estimada = max(0.0, float(cupo_ultimo) - (v_efectiva * horas_hasta_turno))
+        proyeccion_raw = cupo_ultimo_registrado - (v_efectiva * horas_hasta_turno)
+        # 🛑 REGLA 2: Candado para no superar jamás el último cupo conocido ni bajar de 0
+        disp_estimada = float(np.clip(proyeccion_raw, 0.0, cupo_ultimo_registrado))
         probabilidad_cierre = float(np.clip(1.0 - (disp_estimada / 100.0), 0.0, 1.0))
         tendencia = "Estimación Demográfica (Modelo Base)"
 
     else:
-        # Piloto automático con énfasis en la velocidad reciente (últimas 4 lecturas)
         t_base = df_grupo["Fecha_Hora_Extraccion"].iloc[0]
         s_cupo = df_grupo[col_cupo].astype(str).str.replace("%", "").str.strip()
         df_grupo["y_porcentaje"] = pd.to_numeric(s_cupo, errors="coerce").fillna(100.0)
@@ -155,18 +171,20 @@ def proyectar_supervivencia_hibrida(
             )
             tendencia = "Lectura Registrada en Turno"
         else:
-            # Ponderación reciente: Ajuste polinomial priorizando el tramo final
             coeficientes = np.polyfit(t_horas, y_valores, deg=2)
             poly = np.poly1d(coeficientes)
 
-            proyeccion = poly(t_target)
-            disp_estimada = float(np.clip(proyeccion, 0.0, 100.0))
+            proyeccion_raw = poly(t_target)
+            # 🛑 REGLA 2: Candado de monotonía (corta el rebote parabólico hacia arriba)
+            disp_estimada = float(np.clip(proyeccion_raw, 0.0, cupo_ultimo_registrado))
             probabilidad_cierre = float(
                 np.clip(1.0 - (disp_estimada / 100.0), 0.0, 1.0)
             )
 
             aceleracion = 2 * coeficientes[0]
-            if aceleracion < -0.2:
+            if disp_estimada <= 0.0:
+                tendencia = "Grupo Agotado (Lleno Total)"
+            elif aceleracion < -0.2:
                 tendencia = "Acelerando (Riesgo Alto por Desborde)"
             elif aceleracion > 0.2:
                 tendencia = "Desacelerando (Saturación Progresiva)"
