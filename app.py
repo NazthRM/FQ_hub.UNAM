@@ -581,13 +581,37 @@ else:
                             ]
                         ]
                         st.dataframe(df_comb, use_container_width=True, hide_index=True)
+
+                        # 1. Generar el texto en formato iCalendar (.ics)
+                        ics_lines = [
+                            "BEGIN:VCALENDAR",
+                            "VERSION:2.0",
+                            "PRODID:-//FQ Hub UNAM//Generador Horarios//ES",
+                        ]
+                        for item in comb:
+                            ics_lines.append("BEGIN:VEVENT")
+                            ics_lines.append(
+                                f"SUMMARY:{item['Asignatura']} (Gpo {item['Grupo']})"
+                            )
+                            ics_lines.append(
+                                f"DESCRIPTION:Prof: {item['Profesores']} | Tipo: {item['Tipo']}"
+                            )
+                            ics_lines.append(
+                                f"LOCATION:{item.get('Horarios', 'Sin aula')}"
+                            )
+                            ics_lines.append("END:VEVENT")
+                        ics_lines.append("END:VCALENDAR")
+
+                        contenido_ics_str = "\n".join(ics_lines)
+
+                        # 2. Botón con el parámetro 'data' incluido
                         st.download_button(
                             label="Exportar esta combinación a mi Calendario (.ics)",
+                            data=contenido_ics_str,  # 👈 AQUÍ ESTÁ LA CLAVE
                             file_name=f"horario_fq_opcion_{idx+1}.ics",
                             mime="text/calendar",
                             key=f"btn_ics_{idx}",
                         )
-
     # --- VISTA 4: LEADERBOARD DE PROFESORES ---
     elif vista_actual == "Leaderboard de Profesores":
         from data_loader import obtener_leaderboard_profesores
