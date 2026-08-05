@@ -369,7 +369,7 @@ else:
         )
 
         # 2. Filtros intermedios para no saturar el multiselect
-        st.markdown("**Filtros opcionales para acortar la lista de asignaturas:**")
+        st.markdown("**1. Filtros opcionales para acortar la lista de asignaturas:**")
         col_g1, col_g2 = st.columns(2)
         with col_g1:
             filtro_sem_gen = st.multiselect(
@@ -387,15 +387,84 @@ else:
             caracteres=filtro_car_gen,
         )
 
+        st.divider()
+
+        # 4. Selección de Asignaturas y Configuración Dinámica Componente por Componente
+        st.markdown("**2. Selección y Configuración de Asignaturas:**")
         materias_disponibles = sorted(df_horarios_generador["Asignatura"].unique())
 
         asig_elegidas = st.multiselect(
-            "Selecciona las Asignaturas Objetivo:",
+            "Selecciona tus Asignaturas Objetivo:",
             options=materias_disponibles,
             key="gen_asig_objetivo",
         )
 
-        with st.expander("Restricciones de Tiempo y Bloques Reservados (Opcional)"):
+        configuracion_materias = []
+
+        if asig_elegidas:
+            # Identificar materias que tienen más de un tipo (ej. Teoría + Lab / Experimental)
+            materias_multi_tipo = [
+                a
+                for a in asig_elegidas
+                if len(
+                    df_horarios_generador[df_horarios_generador["Asignatura"] == a][
+                        "Tipo"
+                    ].unique()
+                )
+                > 1
+            ]
+
+            if materias_multi_tipo:
+                st.caption(
+                    "📌 **Ajuste Fino:** Desmarca los componentes que NO necesites cursar en este semestre."
+                )
+
+                for asig in materias_multi_tipo:
+                    tipos_materia = df_horarios_generador[
+                        df_horarios_generador["Asignatura"] == asig
+                    ]["Tipo"].unique()
+
+                    st.markdown(f"**{asig}**")
+                    cols = st.columns(len(tipos_materia))
+                    tipos_seleccionados = []
+
+                    for i, tipo in enumerate(tipos_materia):
+                        if cols[i].checkbox(tipo, value=True, key=f"chk_{asig}_{tipo}"):
+                            tipos_seleccionados.append(tipo)
+
+                    configuracion_materias.append(
+                        {"asignatura": asig, "tipos": tipos_seleccionados}
+                    )
+                    st.write("")
+
+            # Agregar materias simples (de un solo tipo) automáticamente
+            for asig in asig_elegidas:
+                if asig not in materias_multi_tipo:
+                    tipos_materia = df_horarios_generador[
+                        df_horarios_generador["Asignatura"] == asig
+                    ]["Tipo"].unique()
+                    configuracion_materias.append(
+                        {"asignatura": asig, "tipos": list(tipos_materia)}
+                    )
+
+        # 5. Sistema de Veto de Profesores
+        st.divider()
+        st.markdown("**3. Control de Profesores (Veto):**")
+        lista_profesores_cruda = set()
+        for prof_str in df_horarios_generador["Profesores"].dropna():
+            for p in str(prof_str).split(","):
+                if p.strip() and p.strip().upper() != "POR ASIGNAR":
+                    lista_profesores_cruda.add(p.strip())
+
+        profesores_vetados = st.multiselect(
+            "⛔ Vetar Profesores (Excluir de mis horarios):",
+            options=sorted(list(lista_profesores_cruda)),
+            key="gen_veto_profes",
+            help="El generador ignorará cualquier combinación que incluya a estos profesores.",
+        )
+
+        # 6. Restricciones de Tiempo y Bloques Reservados
+        with st.expander("⚙️ Restricciones de Tiempo y Bloques Reservados (Opcional)"):
             c1, c2 = st.columns(2)
             with c1:
                 h_min = st.time_input(
@@ -427,79 +496,91 @@ else:
                     "Fin descanso:", value=datetime.time(14, 0), key="gen_h_fin_b"
                 )
 
+        # 7. Ejecución con Solver Refactorizado
         if st.button(
-            "Generar Mejores Horarios", type="primary", key="btn_generar_horarios"
+            "🚀 Generar Mejores Horarios", type="primary", key="btn_generar_horarios"
         ):
-            from solver import generar_combinaciones_horarios
-
-            bloques_res = (
-                [{"dia": dia_bloque, "hora_inicio": h_ini_b, "hora_fin": h_fin_b}]
-                if dia_bloque != "Todos"
-                else [
-                    {"dia": d, "hora_inicio": h_ini_b, "hora_fin": h_fin_b}
-                    for d in ["Lun", "Mar", "Mie", "Jue", "Vie"]
-                ]
-            )
-
-            resultados = generar_combinaciones_horarios(
-                materias_seleccionadas=asig_elegidas,
-                df_horarios=df_horarios_generador,
-                grupos_guardados_set=st.session_state.grupos_guardados,
-                hora_min_inicio=h_min,
-                hora_max_fin=h_max,
-                bloques_reservados=bloques_res,
-            )
-
-            if not resultados:
-                st.error(
-                    "No se encontraron combinaciones compatibles sin empalmes para los filtros seleccionados."
+            if not asig_elegidas:
+                st.warning(
+                    "Debes seleccionar al menos una asignatura para generar combinaciones."
                 )
             else:
-                st.success(f"¡Se encontraron {len(resultados)} combinaciones válidas!")
-                for idx, res in enumerate(resultados):
-                    comb = res["combinacion"]
-                    with st.expander(
-                        f"Opción #{idx+1} | Score: {res['score_compatibilidad']} pts",
-                        expanded=(idx == 0),
-                    ):
-                        df_comb = pd.DataFrame(comb)[
-                            [
-                                "Clave",
-                                "Asignatura",
-                                "Grupo",
-                                "Tipo",
-                                "Profesores",
-                                "Horarios",
+                from solver import generar_combinaciones_horarios
+
+                bloques_res = (
+                    [{"dia": dia_bloque, "hora_inicio": h_ini_b, "hora_fin": h_fin_b}]
+                    if dia_bloque != "Todos"
+                    else [
+                        {"dia": d, "hora_inicio": h_ini_b, "hora_fin": h_fin_b}
+                        for d in ["Lun", "Mar", "Mie", "Jue", "Vie"]
+                    ]
+                )
+
+                # Se envía configuracion_materias y profesores_vetados al solver
+                resultados = generar_combinaciones_horarios(
+                    configuracion_materias=configuracion_materias,
+                    df_horarios=df_horarios_generador,
+                    grupos_guardados_set=st.session_state.grupos_guardados,
+                    hora_min_inicio=h_min,
+                    hora_max_fin=h_max,
+                    bloques_reservados=bloques_res,
+                    profesores_vetados=profesores_vetados,
+                )
+
+                if not resultados:
+                    st.error(
+                        "No se encontraron combinaciones compatibles sin empalmes. Prueba desmarcando profesores vetados o reduciendo bloques reservados."
+                    )
+                else:
+                    st.success(
+                        f"¡Se encontraron {len(resultados)} combinaciones válidas!"
+                    )
+                    for idx, res in enumerate(resultados):
+                        comb = res["combinacion"]
+                        with st.expander(
+                            f"Opción #{idx+1} | Score: {res['score_compatibilidad']} pts",
+                            expanded=(idx == 0),
+                        ):
+                            df_comb = pd.DataFrame(comb)[
+                                [
+                                    "Clave",
+                                    "Asignatura",
+                                    "Grupo",
+                                    "Tipo",
+                                    "Profesores",
+                                    "Horarios",
+                                ]
                             ]
-                        ]
-                        st.dataframe(df_comb, use_container_width=True, hide_index=True)
+                            st.dataframe(
+                                df_comb, use_container_width=True, hide_index=True
+                            )
 
-                        ics_lines = [
-                            "BEGIN:VCALENDAR",
-                            "VERSION:2.0",
-                            "PRODID:-//FQ Hub UNAM//Generador Horarios//ES",
-                        ]
-                        for item in comb:
-                            ics_lines.append("BEGIN:VEVENT")
-                            ics_lines.append(
-                                f"SUMMARY:{item['Asignatura']} (Gpo {item['Grupo']})"
-                            )
-                            ics_lines.append(
-                                f"DESCRIPTION:Prof: {item['Profesores']} | Tipo: {item['Tipo']}"
-                            )
-                            ics_lines.append(
-                                f"LOCATION:{item.get('Horarios', 'Sin aula')}"
-                            )
-                            ics_lines.append("END:VEVENT")
-                        ics_lines.append("END:VCALENDAR")
+                            ics_lines = [
+                                "BEGIN:VCALENDAR",
+                                "VERSION:2.0",
+                                "PRODID:-//FQ Hub UNAM//Generador Horarios//ES",
+                            ]
+                            for item in comb:
+                                ics_lines.append("BEGIN:VEVENT")
+                                ics_lines.append(
+                                    f"SUMMARY:{item['Asignatura']} (Gpo {item['Grupo']})"
+                                )
+                                ics_lines.append(
+                                    f"DESCRIPTION:Prof: {item['Profesores']} | Tipo: {item['Tipo']}"
+                                )
+                                ics_lines.append(
+                                    f"LOCATION:{item.get('Horarios', 'Sin aula')}"
+                                )
+                                ics_lines.append("END:VEVENT")
+                            ics_lines.append("END:VCALENDAR")
 
-                        st.download_button(
-                            label="Exportar esta combinación a mi Calendario (.ics)",
-                            data="\n".join(ics_lines),
-                            file_name=f"horario_fq_opcion_{idx+1}.ics",
-                            mime="text/calendar",
-                            key=f"btn_ics_{idx}",
-                        )
+                            st.download_button(
+                                label="Exportar esta combinación a mi Calendario (.ics)",
+                                data="\n".join(ics_lines),
+                                file_name=f"horario_fq_opcion_{idx+1}.ics",
+                                mime="text/calendar",
+                                key=f"btn_ics_{idx}",
+                            )
 
     # --- VISTA 4: LEADERBOARD DE PROFESORES ---
     elif vista_actual == "Leaderboard de Profesores":

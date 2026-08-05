@@ -1,5 +1,6 @@
 import datetime
 import re
+import pandas as pd
 from typing import Dict, List, Set, Tuple
 
 
@@ -69,21 +70,50 @@ def validar_restricciones_tiempo(
 
 
 def generar_combinaciones_horarios(
-    materias_seleccionadas: List[str],
+    configuracion_materias,
     df_horarios,
-    grupos_guardados_set: Set[str],
-    hora_min_inicio: datetime.time = None,
-    hora_max_fin: datetime.time = None,
-    bloques_reservados: List[Dict] = None,
+    grupos_guardados_set=None,
+    hora_min_inicio=None,
+    hora_max_fin=None,
+    bloques_reservados=None,
+    profesores_vetados=None,
     max_resultados: int = 15,
-) -> List[Dict]:
-    """Generador principal mediante Backtracking para encontrar las combinaciones de horarios válidos."""
-    # Agrupar grupos por asignatura
+):
+    """Generador principal mediante Backtracking para encontrar combinaciones de horarios válidos."""
+    if profesores_vetados is None:
+        profesores_vetados = []
+    if bloques_reservados is None:
+        bloques_reservados = []
+
+    # 1. APLICAR VETO DE PROFESORES
+    def tiene_vetado(prof_str):
+        if pd.isna(prof_str):
+            return False
+        for vetado in profesores_vetados:
+            if vetado.lower() in str(prof_str).lower():
+                return True
+        return False
+
+    df_filtrado = df_horarios[~df_horarios["Profesores"].apply(tiene_vetado)].copy()
+
+    # 2. SISTEMA DE CUBETAS DIRIGIDO POR EL USUARIO (TEORÍA / LAB)
     grupos_por_materia = []
-    for mat in materias_seleccionadas:
-        grupos_mat = df_horarios[df_horarios["Asignatura"] == mat].to_dict("records")
-        if grupos_mat:
-            grupos_por_materia.append(grupos_mat)
+
+    for config in configuracion_materias:
+        asig = config["asignatura"]
+        tipos_requeridos = config["tipos"]
+
+        for tipo in tipos_requeridos:
+            df_asig_tipo = df_filtrado[
+                (df_filtrado["Asignatura"] == asig) & (df_filtrado["Tipo"] == tipo)
+            ]
+            grupos_tipo = df_asig_tipo.to_dict("records")
+
+            if grupos_tipo:
+                grupos_por_materia.append(grupos_tipo)
+            else:
+                # Si una materia/tipo no tiene grupos disponibles (por vetos o filtros), no hay combinación posible
+                return []
 
     if not grupos_por_materia:
         return []
