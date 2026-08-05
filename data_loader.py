@@ -276,7 +276,6 @@ def obtener_leaderboard_profesores():
             {
                 "Profesor": prof,
                 "Asignatura": grupo,
-                "Cupo Actual": f"{cupo_actual}%",
                 "Velocidad Agotamiento": f"{round(velocidad_pct_hora, 1)}% / hr",
                 "Hora de Cierre": hora_cierre_str,
                 "velocidad_raw": velocidad_pct_hora,
