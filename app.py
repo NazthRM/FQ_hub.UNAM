@@ -394,25 +394,123 @@ else:
     elif vista_actual == "Generador de Horarios":
         st.subheader("Generador Inteligente de Horarios")
         st.caption(
-            "Selecciona tus asignaturas objetivo y define tus restricciones de tiempo."
+            "Filtra por plan de estudios, semestre y carácter, o busca directamente."
         )
 
-        # 🎯 FILTRAR MATERIAS SEGÚN LA CARRERA SELECCIONADA EN LA SESIÓN
+        # GRID 2 FILAS x 3 COLUMNAS PARA SELECCIÓN DE CARRERA
+        st.markdown("**1. Plan de Estudios (Carrera):**")
+        carreras_lista = [
+            "Química Farmacéutico Biológica",
+            "Ingeniería Química",
+            "Química",
+            "Química de Alimentos",
+            "Ingeniería Química Metalúrgica",
+            "Química e Ingeniería en Materiales",
+        ]
+
+        row1_c1, row1_c2, row1_c3 = st.columns(3)
+        row2_c1, row2_c2, row2_c3 = st.columns(3)
+        cols_grid = [row1_c1, row1_c2, row1_c3, row2_c1, row2_c2, row2_c3]
+
+        for idx, c_nom in enumerate(carreras_lista):
+            activo = st.session_state.carrera_seleccionada == c_nom
+            label_btn = f"{'🟢' if activo else '⚪'} {c_nom}"
+            if cols_grid[idx].button(
+                label_btn, key=f"btn_carrera_{idx}", use_container_width=True
+            ):
+                st.session_state.carrera_seleccionada = c_nom
+                st.rerun()
+
+        todas_activo = st.session_state.carrera_seleccionada == "Todas las carreras"
+        if st.button(
+            f"{'🟢' if todas_activo else '⚪'} Mostrar todas las carreras",
+            key="btn_todas_carreras",
+            use_container_width=True,
+        ):
+            st.session_state.carrera_seleccionada = "Todas las carreras"
+            st.rerun()
+
+        # Filtrado base por carrera
+        relaciones_filtradas = df_relaciones.copy()
         if st.session_state.carrera_seleccionada != "Todas las carreras":
             carreras_validas = {st.session_state.carrera_seleccionada, "Tronco Común"}
-            ids_carrera = df_relaciones[
-                df_relaciones["Carrera"].isin(carreras_validas)
-            ]["ID Único"].unique()
-            materias_disponibles = sorted(
-                df_horarios[df_horarios["ID Único"].isin(ids_carrera)][
-                    "Asignatura"
-                ].unique()
-            )
-        else:
-            materias_disponibles = sorted(df_horarios["Asignatura"].unique())
-        asig_elegidas = st.multiselect(
-            "1. Selecciona las Asignaturas Objetivo:", options=materias_disponibles
+            relaciones_filtradas = relaciones_filtradas[
+                relaciones_filtradas["Carrera"].isin(carreras_validas)
+            ]
+
+        semestres_disponibles = sorted(
+            [s for s in relaciones_filtradas["Semestre"].unique() if s != "N/A"],
+            key=int,
         )
+        caracteres_disponibles = sorted(
+            [c for c in relaciones_filtradas["Caracter"].unique() if c != "Desconocido"]
+        )
+
+        st.divider()
+        col_f1, col_f2 = st.columns(2)
+        with col_f1:
+            filtro_semestre = st.multiselect(
+                "2. Semestre:", options=semestres_disponibles
+            )
+        with col_f2:
+            filtro_caracter = st.multiselect(
+                "3. Carácter:", options=caracteres_disponibles
+            )
+
+        # LÓGICA DE FILTRADO ADITIVA (UNIÓN NO RESTRICTIVA)
+        cond_semestre = (
+            relaciones_filtradas["Semestre"].isin(filtro_semestre)
+            if filtro_semestre
+            else pd.Series(False, index=relaciones_filtradas.index)
+        )
+        cond_caracter = (
+            relaciones_filtradas["Caracter"].isin(filtro_caracter)
+            if filtro_caracter
+            else pd.Series(False, index=relaciones_filtradas.index)
+        )
+
+        if filtro_semestre and filtro_caracter:
+            relaciones_filtradas = relaciones_filtradas[cond_semestre | cond_caracter]
+        elif filtro_semestre:
+            relaciones_filtradas = relaciones_filtradas[cond_semestre]
+        elif filtro_caracter:
+            relaciones_filtradas = relaciones_filtradas[cond_caracter]
+
+        ids_validos = relaciones_filtradas["ID Único"].unique()
+        df_filtrado = df_horarios[df_horarios["ID Único"].isin(ids_validos)].copy()
+
+        materias_disponibles = sorted(df_filtrado["Asignatura"].unique())
+
+        col_t1, col_t2 = st.columns(2)
+        with col_t1:
+            filtro_materia = st.multiselect(
+                "4. Asignatura(s):", options=materias_disponibles
+            )
+        with col_t2:
+            filtro_profesor = st.text_input("Buscar por Profesor:")
+
+        if filtro_materia:
+            df_filtrado = df_filtrado[df_filtrado["Asignatura"].isin(filtro_materia)]
+
+        if filtro_profesor:
+            df_filtrado = df_filtrado[
+                df_filtrado["Profesores"].str.contains(
+                    filtro_profesor.strip().upper(), na=False
+                )
+            ]
+
+        mostrar_tabla = True
+        if (
+            st.session_state.carrera_seleccionada != "Todas las carreras"
+            and not filtro_materia
+            and not filtro_profesor
+            and not filtro_semestre
+            and not filtro_caracter
+        ):
+            mostrar_tabla = False
+            st.info(
+                "Selecciona un semestre, carácter, asignatura o ingresa un nombre de profesor para desplegar los grupos."
+            )
 
         with st.expander("Restricciones de Tiempo y Bloques Reservados (Opcional)"):
             c1, c2 = st.columns(2)
@@ -452,7 +550,7 @@ else:
                     )
 
             resultados = generar_combinaciones_horarios(
-                materias_seleccionadas=asig_elegidas,
+                materias_seleccionadas=filtro_materia,
                 df_horarios=df_horarios,
                 grupos_guardados_set=st.session_state.grupos_guardados,
                 hora_min_inicio=h_min,
