@@ -15,64 +15,7 @@
 
 <!--  onLoad="this.document.forma1.gs_alucta.focus();" -->
 
-<script language="javascript">
-	var message="Copy Right Ar.Co.";
-
-	function clickIE4(){
-		if (event.button==2){
-		alert(message);
-		return false;
-		}
-	}
-
-	function clickNS4(e){
-		if (document.layers||document.getElementById&&!document.all){
-		if (e.which==2||e.which==3){
-			alert(message);
-			return false;
-		}
-		}
-	}
-
-	if (document.layers){
-		document.captureEvents(Event.MOUSEDOWN);
-		document.onmousedown=clickNS4;
-		}
-	else if (document.all&&!document.getElementById){
-		document.onmousedown=clickIE4;
-	}
-	document.oncontextmenu=new Function("alert(message);return false")
-
-	function agrega(){
-		document.forma.target="rightFrame";
-	document.forma.action="hor_mis_hor_e2_mat.php4";
-	document.forma.submit();
-	}
-
-	function makeArray() {
-				for (i = 0; i<makeArray.arguments.length; i++)
-				this[i + 1] = makeArray.arguments[i];
-			}
-
-	function makeArray0() {
-				for (i = 0; i<makeArray0.arguments.length; i++)
-				this[i] = makeArray0.arguments[i];
-			}
-
-	function y2k(number) {
-				return (number < 1000) ? number + 1900 : number;
-			}
-
-	var months = new makeArray('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
-			var days = new makeArray0('Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado');
-
-	var today = new Date();
-			var day   = days[today.getDay()];
-			var date  = today.getDate();
-			var month = today.getMonth() + 1;
-			var year  = y2k(today.getYear());
-
-</script>
+<script language="javascript" src="js/hor_tot_e2.js"></script>
 
 
 
@@ -86,7 +29,7 @@
 </html>
 <div class='bg-blue-900 text-lg text-white flex items-center justify-between px-4 py-2'>
 		<span>Coordinaci&oacute;n de Asuntos Escolares</span>
-		<span><script language='JavaScript'>document.write(months[month] + ' ' + date + ', ' + year);</script></span>
+		<span>Agosto 5, 2026</span>
 	</div><div class='my-5 font-bold text-lg text-blue-900 text-center'>Horarios Semestre: 2027-1</div><div class="flex flex-col items-center justify-center w-full px-4"><div class="w-full max-w-6xl overflow-x-auto"><table class="w-full divide-y divide-gray-300 overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg"><thead class="bg-gray-50"><tr><th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Clave</th>
        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 w-[350px]">Asignatura</th>
        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Grupo</th>
@@ -241,7 +184,7 @@
        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Profesor</th>
        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Horario/Sal&oacute;n</th>
        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Cupo</th></tr></thead><tbody class="divide-y divide-gray-200 bg-white"><tr><td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6'>0056</td><td class='py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 w-[350px] break-words'><table width=100%><td>INTRODUCCION A LA QUIMIOINFORMATICA</td><tr>
-       <td class='text-xs text-center px-2 py-1 text-blue-800 font-bold whitespace-normal break-words'>El curso se impartirá de manera virtual a través de la plataforma Zoom. La liga de acceso será proporcionada vía correo electrónico antes de la primera sesión. Para mayores informes contactar al Prof. Norberto Sánchez Cruz: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="83edecf1e1e6f1f7ecadf0e2ede0ebe6f9c3eaf2f6eaeeeae0e2adf6ede2ee">[email&#160;protected]</a>.</td>
+       <td class='text-xs text-center px-2 py-1 text-blue-800 font-bold whitespace-normal break-words'>El curso se impartirá de manera virtual a través de la plataforma Zoom. La liga de acceso será proporcionada vía correo electrónico antes de la primera sesión. Para mayores informes contactar al Prof. Norberto Sánchez Cruz: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8ae4e5f8e8eff8fee5a4f9ebe4e9e2eff0cae3fbffe3e7e3e9eba4ffe4ebe7">[email&#160;protected]</a>.</td>
        </tr><tr>
        <td class='text-xs text-center px-2 py-1 text-blue-800 font-bold whitespace-normal break-words'></td>
        </tr></table>
@@ -346,7 +289,7 @@
                 <div class='flex flex-col gap-2 items-center justify-center'>
         <div class='flex gap-1 items-center justify-center'><span>Mar</span><span>18:00 a 19:30</span><span class='text-sm text-blue-800 font-bold'>206</span></div><div class='flex gap-1 items-center justify-center'><span>Jue</span><span>18:00 a 19:30</span><span class='text-sm text-blue-800 font-bold'>206</span></div></div><td><table><td class='whitespace-nowrap px-3 py-4 text-sm bg-green-600 text-white text-center grid gap-2'>
                            <span>Disponible:</span>
-                           <span>83 %</span>
+                           <span>75 %</span>
                            </td></table></td></td></td></tr><tbody class="divide-y divide-gray-200 bg-white"><tr><td class='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6'>0068</td><td class='py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 w-[350px] break-words'><table width=100%><td>SINTESIS DE MATERIALES</td><tr>
        <td class='text-xs text-center px-2 py-1 text-blue-800 font-bold whitespace-normal break-words'></td>
        </tr><tr>
@@ -360,7 +303,7 @@
                 <div class='flex flex-col gap-2 items-center justify-center'>
         <div class='flex gap-1 items-center justify-center'><span>Mie</span><span>14:00 a 18:00</span><span class='text-sm text-blue-800 font-bold'>C-1</span></div></div><td><table><td class='whitespace-nowrap px-3 py-4 text-sm bg-green-600 text-white text-center grid gap-2'>
                            <span>Disponible:</span>
-                           <span>83 %</span>
+                           <span>75 %</span>
                            </td></table></td></td></td></tr></table></div><br><div class="flex flex-col items-center justify-center w-full px-4"><div class="w-full max-w-6xl overflow-x-auto"><table class="w-full divide-y divide-gray-300 overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg"><thead class="bg-gray-50"><tr><th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Clave</th>
        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 w-[350px]">Asignatura</th>
        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Grupo</th>
