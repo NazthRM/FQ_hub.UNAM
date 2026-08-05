@@ -397,13 +397,22 @@ else:
             "Selecciona tus asignaturas objetivo y define tus restricciones de tiempo."
         )
 
-# 🎯 FILTRAR MATERIAS SEGÚN LA CARRERA SELECCIONADA EN LA SESIÓN
-    if st.session_state.carrera_seleccionada != "Todas las carreras":
-        carreras_validas = {st.session_state.carrera_seleccionada, "Tronco Común"}
-        ids_carrera = df_relaciones[df_relaciones["Carrera"].isin(carreras_validas)]["ID Único"].unique()
-        materias_disponibles = sorted(df_horarios[df_horarios["ID Único"].isin(ids_carrera)]["Asignatura"].unique())
-    else:
-        materias_disponibles = sorted(df_horarios["Asignatura"].unique())
+        # 🎯 FILTRAR MATERIAS SEGÚN LA CARRERA SELECCIONADA EN LA SESIÓN
+        if st.session_state.carrera_seleccionada != "Todas las carreras":
+            carreras_validas = {st.session_state.carrera_seleccionada, "Tronco Común"}
+            ids_carrera = df_relaciones[
+                df_relaciones["Carrera"].isin(carreras_validas)
+            ]["ID Único"].unique()
+            materias_disponibles = sorted(
+                df_horarios[df_horarios["ID Único"].isin(ids_carrera)][
+                    "Asignatura"
+                ].unique()
+            )
+        else:
+            materias_disponibles = sorted(df_horarios["Asignatura"].unique())
+        asig_elegidas = st.multiselect(
+            "1. Selecciona las Asignaturas Objetivo:", options=materias_disponibles
+        )
 
         with st.expander("Restricciones de Tiempo y Bloques Reservados (Opcional)"):
             c1, c2 = st.columns(2)
