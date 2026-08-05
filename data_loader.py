@@ -255,17 +255,22 @@ def obtener_leaderboard_profesores():
         cupo_actual = df_g["cupo_num"].iloc[-1]
 
         t_inicio = df_g["Fecha_Hora_Extraccion"].iloc[0]
-        t_ultimo = df_g["Fecha_Hora_Extraccion"].iloc[-1]
 
-        horas_activas = max(0.1, calcular_horas_activas_inscripcion(t_inicio, t_ultimo))
-        velocidad_pct_hora = (cupo_inicial - cupo_actual) / horas_activas
-
+        # 🎯 Detectar si el grupo ya se llenó para congelar la hora final (t_fin)
         df_lleno = df_g[df_g["cupo_num"] <= 0.0]
-        hora_cierre_str = (
-            df_lleno["Fecha_Hora_Extraccion"].iloc[0].strftime("%d/%m %H:%M")
-            if not df_lleno.empty
-            else "Aún Disponible"
-        )
+
+        if not df_lleno.empty:
+            # Si se llenó, t_fin es el momento EXACTO en que llegó a 0%
+            t_fin = df_lleno["Fecha_Hora_Extraccion"].iloc[0]
+            hora_cierre_str = t_fin.strftime("%d/%m %H:%M")
+        else:
+            # Si sigue abierto, t_fin es la última lectura de la telemetría
+            t_fin = df_g["Fecha_Hora_Extraccion"].iloc[-1]
+            hora_cierre_str = "Aún Disponible"
+
+        # Tiempo activo hasta que se agotó (o hasta la última lectura)
+        horas_activas = max(0.1, calcular_horas_activas_inscripcion(t_inicio, t_fin))
+        velocidad_pct_hora = (cupo_inicial - cupo_actual) / horas_activas
 
         resultados.append(
             {
