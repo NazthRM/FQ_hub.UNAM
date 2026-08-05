@@ -25,7 +25,7 @@ def parsear_horario_cadena(horarios_str: str) -> List[Dict]:
 
     bloques = horarios_str.split("|")
     pattern = re.compile(
-        r"([A-Za-aáéíóúÁÉÍÓÚ]+)\s+(\d{1,2}:\d{2})\s+a\s+(\d{1,2}:\d{2})"
+        r"([A-Za-zaáéíóúÁÉÍÓÚ]+)\s+(\d{1,2}:\d{2})\s+a\s+(\d{1,2}:\d{2})"
     )
 
     for b in bloques:
@@ -80,6 +80,26 @@ def generar_combinaciones_horarios(
     solo_disponibles: bool = True,
     max_resultados: int = 15,
 ):
+
+    # CORRECCIÓN: Saneamiento de variables por defecto
+    if grupos_guardados_set is None:
+        grupos_guardados_set = set()
+    if profesores_vetados is None:
+        profesores_vetados = []
+    if bloques_reservados is None:
+        bloques_reservados = []
+
+    # CORRECCIÓN: Búsqueda exacta de profesores para evitar falsos positivos
+    def tiene_vetado(prof_str):
+        if pd.isna(prof_str):
+            return False
+        profesores_lista = [p.strip().lower() for p in str(prof_str).split(",")]
+        for vetado in profesores_vetados:
+            vetado_clean = vetado.strip().lower()
+            if any(vetado_clean == p for p in profesores_lista):
+                return True
+        return False
+
     """Generador principal mediante Backtracking para encontrar combinaciones de horarios válidos."""
     if profesores_vetados is None:
         profesores_vetados = []
@@ -203,3 +223,38 @@ def generar_combinaciones_horarios(
     # Ordenar por el mejor Score
     resultados_evaluados.sort(key=lambda x: x["score_compatibilidad"], reverse=True)
     return resultados_evaluados[:max_resultados]
+
+
+def construir_malla_semanal(combinacion: list) -> pd.DataFrame:
+    """Construye un DataFrame matricial (Horas vs Días) para visualizar el horario en la app."""
+    dias = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
+    horas_intervalo = [f"{h:02d}:00 - {h+1:02d}:00" for h in range(7, 21)]
+
+    # Malla inicial vacía
+    malla = pd.DataFrame("", index=horas_intervalo, columns=dias)
+
+    for item in combinacion:
+        slots = parsear_horario_cadena(item.get("Horarios", ""))
+        etiqueta = f"🧪 {item['Asignatura']}\n(Gpo {item['Grupo']} - {item['Tipo']})"
+
+        for s in slots:
+            d = s["dia"]
+            if d in dias:
+                h_ini = s["hora_inicio"].hour
+                h_fin = s["hora_fin"].hour
+                if s["hora_fin"].minute > 0:
+                    h_fin += 1
+
+                for h in range(h_ini, h_fin):
+                    if 7 <= h < 21:
+                        slot_str = f"{h:02d}:00 - {h+1:02d}:00"
+                        if slot_str in malla.index:
+                            val_actual = malla.at[slot_str, d]
+                            malla.at[slot_str, d] = (
+                                f"{val_actual}\n───\n{etiqueta}".strip()
+                                if val_actual
+                                else etiqueta
+                            )
+
+    # Filtrar únicamente las horas con clases ocupadas
+    return malla.loc[(malla != "").any(axis=1)]

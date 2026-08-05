@@ -474,7 +474,7 @@ else:
         )
 
         # 6. Restricciones de Tiempo y Bloques Reservados
-        with st.expander("⚙️ Restricciones de Tiempo y Bloques Reservados (Opcional)"):
+        with st.expander("Restricciones de Tiempo y Bloques Reservados (Opcional)"):
             c1, c2 = st.columns(2)
             with c1:
                 h_min = st.time_input(
@@ -546,16 +546,16 @@ else:
                     st.success(
                         f"¡Se encontraron {len(resultados)} combinaciones válidas!"
                     )
-                for idx, res in enumerate(resultados):
-                    comb = res["combinacion"]
-                    with st.expander(
-                        f"📅 Opción #{idx+1} | Score: {res['score_compatibilidad']} pts",
-                        expanded=(idx == 0),
-                    ):
-                        # 1. Pestañas para elegir entre Vista Gráfica (Malla) y Vista Detallada (Tabla)
-                        tab_malla, tab_detalles = st.tabs(
-                            ["🗓️ Malla Semanal Visual", "📋 Lista de Grupos"]
-                        )
+                    for idx, res in enumerate(resultados):
+                        comb = res["combinacion"]
+                        with st.expander(
+                            f"Opción #{idx+1} | Score: {res['score_compatibilidad']} pts",
+                            expanded=(idx == 0),
+                        ):
+                            # 1. Pestañas para elegir entre Vista Gráfica (Malla) y Vista Detallada (Tabla)
+                            tab_malla, tab_detalles = st.tabs(
+                                ["Malla Semanal Visual", "Lista de Grupos"]
+                            )
 
                         with tab_malla:
                             from solver import construir_malla_semanal
