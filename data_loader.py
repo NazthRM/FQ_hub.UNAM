@@ -5,7 +5,6 @@ import pandas as pd
 import requests
 import streamlit as st
 
-# URL Raw de GitHub para la matriz de cupos en vivo
 URL_RAW_CUPOS = "https://raw.githubusercontent.com/NazthRM/FQ_hub.UNAM/refs/heads/main/Documentación/matriz_cupos.csv"
 
 BASE_DIR = Path(__file__).parent
@@ -14,7 +13,6 @@ DOCS_DIR = BASE_DIR / "Documentación"
 
 @st.cache_data
 def cargar_mapa_planes():
-    """Lee los JSON de los planes de estudio y mapea correctamente cada categoría."""
     mapa = {}
     ruta_planes = DOCS_DIR / "planes_estudio"
 
@@ -45,17 +43,15 @@ def cargar_mapa_planes():
                 clave = str(mat.get("clave", "")).strip()
                 caracter_raw = str(mat.get("caracter", "")).strip().lower()
 
-                if "semestre" in caracter_raw or semestre != "N/A":
-                    caracter_final = "Obligatoria"
-                elif (
-                    "sociohumanistica" in caracter_raw
-                    or "sociohumanística" in caracter_raw
-                ):
+                # NUEVA JERARQUÍA: Privilegiar categorías especiales antes que la temporalidad
+                if "sociohumanistic" in caracter_raw:
                     caracter_final = "Sociohumanística"
-                elif "inorgánica" in caracter_raw or "inorganica" in caracter_raw:
-                    caracter_final = "Inorgánica de Elección"
                 elif "disciplinaria" in caracter_raw:
                     caracter_final = "Disciplinaria"
+                elif "inorganica" in caracter_raw or "inorgánica" in caracter_raw:
+                    caracter_final = "Inorgánica de Elección"
+                elif "semestre" in caracter_raw or semestre != "N/A":
+                    caracter_final = "Obligatoria"
                 else:
                     caracter_final = caracter_default
 
@@ -70,7 +66,6 @@ def cargar_mapa_planes():
                 if registro not in mapa[clave]:
                     mapa[clave].append(registro)
 
-            # 1. Semestres (Obligatorias)
             for sem_key, materias in plan.get("semestres", {}).items():
                 sem_num = sem_key.replace("semestre_", "")
                 for mat in materias:
@@ -78,7 +73,6 @@ def cargar_mapa_planes():
                         mat, semestre=sem_num, caracter_default="Obligatoria"
                     )
 
-            # 2. Categorías fuera de semestre
             for mat in plan.get("optativas", []):
                 procesar_materia(mat, caracter_default="Optativa")
             for mat in plan.get("sociohumanisticas", []):
@@ -101,13 +95,11 @@ def cargar_horarios_indexados():
         datos = json.load(f)
 
     mapa_planes = cargar_mapa_planes()
-    filas = []
-    relaciones_plan = []
+    filas, relaciones_plan = [], []
 
     for item in datos:
         id_unico = item.get("id_unico", "")
         clave = str(item.get("clave", "")).strip()
-
         profesores_str = ", ".join(item.get("profesores", []))
         horarios_lista = item.get("horarios", [])
         horarios_str = (
@@ -135,43 +127,63 @@ def cargar_horarios_indexados():
         )
 
         info_planes = mapa_planes.get(clave, [])
-
+        info_planes = mapa_planes.get(clave, [])
         if info_planes:
             carreras_unicas = set(info["Carrera"] for info in info_planes)
             es_tronco_comun = len(carreras_unicas) >= 5
 
-            if es_tronco_comun:
-                semestre_tc = next(
-                    (
-                        info["Semestre"]
-                        for info in info_planes
-                        if info["Semestre"] != "N/A"
-                    ),
-                    "N/A",
-                )
+            # MANTENER la inyección estricta para cada carrera, preservando su semestre exacto y carácter exacto.
+            for info in info_planes:
                 relaciones_plan.append(
                     {
                         "ID Único": id_unico,
-                        "Carrera": "Tronco Común",
-                        "Semestre": semestre_tc,
-                        "Caracter": "Obligatoria",
+                        "Carrera": info["Carrera"],
+                        "Semestre": info["Semestre"],
+                        "Caracter": info["Caracter"],
                     }
                 )
-            else:
-                for info in info_planes:
-                    relaciones_plan.append(
-                        {
-                            "ID Único": id_unico,
-                            "Carrera": info["Carrera"],
-                            "Semestre": info["Semestre"],
-                            "Caracter": info["Caracter"],
-                        }
-                    )
+    return pd.DataFrame(filas), pd.DataFrame(relaciones_plan).drop_duplicates()
 
-    df_materias = pd.DataFrame(filas)
-    df_relaciones = pd.DataFrame(relaciones_plan).drop_duplicates()
 
-    return df_materias, df_relaciones
+@st.cache_data
+def obtener_horarios_filtrados(
+    carrera="Todas las carreras", semestres=None, caracteres=None
+):
+    """Función unificada para filtrar horarios por carrera, semestre y carácter."""
+    df_horarios, df_relaciones = cargar_horarios_indexados()
+    if df_horarios.empty or df_relaciones.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
+    relaciones_filtradas = df_relaciones.copy()
+
+    if carrera != "Todas las carreras":
+        carreras_validas = {carrera, "Tronco Común"}
+        relaciones_filtradas = relaciones_filtradas[
+            relaciones_filtradas["Carrera"].isin(carreras_validas)
+        ]
+
+    cond_semestre = (
+        relaciones_filtradas["Semestre"].isin(semestres)
+        if semestres
+        else pd.Series(False, index=relaciones_filtradas.index)
+    )
+    cond_caracter = (
+        relaciones_filtradas["Caracter"].isin(caracteres)
+        if caracteres
+        else pd.Series(False, index=relaciones_filtradas.index)
+    )
+
+    if semestres and caracteres:
+        relaciones_filtradas = relaciones_filtradas[cond_semestre | cond_caracter]
+    elif semestres:
+        relaciones_filtradas = relaciones_filtradas[cond_semestre]
+    elif caracteres:
+        relaciones_filtradas = relaciones_filtradas[cond_caracter]
+
+    ids_validos = relaciones_filtradas["ID Único"].unique()
+    df_resultado = df_horarios[df_horarios["ID Único"].isin(ids_validos)].copy()
+
+    return df_resultado, relaciones_filtradas
 
 
 @st.cache_data(ttl=300)
@@ -182,32 +194,59 @@ def cargar_historico_en_vivo():
         df_live = pd.read_csv(io.StringIO(response.text))
 
         ruta_lb = DOCS_DIR / "matriz_cupos_LB.csv"
-        if ruta_lb.exists():
-            df_lb = pd.read_csv(ruta_lb)
-            df_historico = pd.concat([df_lb, df_live], ignore_index=True)
-        else:
-            df_historico = df_live.copy()
-
-        df_historico["Fecha_Hora_Extraccion"] = pd.to_datetime(
-            df_historico["Fecha_Hora_Extraccion"], utc=True
+        df_historico = (
+            pd.concat([pd.read_csv(ruta_lb), df_live], ignore_index=True)
+            if ruta_lb.exists()
+            else df_live.copy()
         )
+
         df_historico["Fecha_Hora_Extraccion"] = (
-            df_historico["Fecha_Hora_Extraccion"]
+            pd.to_datetime(df_historico["Fecha_Hora_Extraccion"], utc=True)
             .dt.tz_convert("America/Mexico_City")
             .dt.tz_localize(None)
         )
 
-        df_historico = df_historico.drop_duplicates(
-            subset=["id_unico", "Fecha_Hora_Extraccion"], keep="last"
+        return (
+            df_historico.drop_duplicates(
+                subset=["id_unico", "Fecha_Hora_Extraccion"], keep="last"
+            )
+            .sort_values(by=["id_unico", "Fecha_Hora_Extraccion"])
+            .reset_index(drop=True)
         )
-        df_historico = df_historico.sort_values(
-            by=["id_unico", "Fecha_Hora_Extraccion"]
-        ).reset_index(drop=True)
-
-        return df_historico
     except Exception as e:
         st.error(f"Error cargando histórico de cupos: {e}")
         return pd.DataFrame()
+
+
+@st.cache_data
+def enriquecer_con_ultimos_cupos(df_target):
+    """Enriquece un DataFrame de grupos con la columna del último cupo registrado en telemetría."""
+    df_historico = cargar_historico_en_vivo()
+    df_res = df_target.copy()
+
+    if not df_historico.empty and "id_unico" in df_historico.columns:
+        df_ultimos = (
+            df_historico.sort_values("Fecha_Hora_Extraccion")
+            .groupby("id_unico")
+            .last()
+            .reset_index()
+        )
+        col_cupo = "cupo" if "cupo" in df_ultimos.columns else df_ultimos.columns[-1]
+        df_ultimos["Cupo Actual"] = (
+            df_ultimos[col_cupo].astype(str).str.replace("%", "").str.strip() + "%"
+        )
+        df_res = pd.merge(
+            df_res,
+            df_ultimos[["id_unico", "Cupo Actual"]],
+            left_on="ID Único",
+            right_on="id_unico",
+            how="left",
+        )
+        df_res["Cupo Actual"] = df_res["Cupo Actual"].fillna("100%")
+    else:
+        df_res["Cupo Actual"] = "100%"
+
+    return df_res
 
 
 @st.cache_data
@@ -229,7 +268,6 @@ def obtener_datos_fusionados():
 
 @st.cache_data(ttl=300)
 def obtener_leaderboard_profesores():
-    """Calcula el ranking de profesores con grupos más demandados y su velocidad de agotamiento."""
     from predictor import calcular_horas_activas_inscripcion
 
     df_fusionado = obtener_datos_fusionados()
@@ -237,7 +275,6 @@ def obtener_leaderboard_profesores():
         return pd.DataFrame()
 
     col_cupo = "cupo" if "cupo" in df_fusionado.columns else df_fusionado.columns[-1]
-
     df_fusionado["cupo_num"] = pd.to_numeric(
         df_fusionado[col_cupo].astype(str).str.replace("%", "").str.strip(),
         errors="coerce",
@@ -253,22 +290,16 @@ def obtener_leaderboard_profesores():
         df_g = df_g.sort_values("Fecha_Hora_Extraccion")
         cupo_inicial = df_g["cupo_num"].iloc[0]
         cupo_actual = df_g["cupo_num"].iloc[-1]
-
         t_inicio = df_g["Fecha_Hora_Extraccion"].iloc[0]
 
-        # 🎯 Detectar si el grupo ya se llenó para congelar la hora final (t_fin)
         df_lleno = df_g[df_g["cupo_num"] <= 0.0]
-
         if not df_lleno.empty:
-            # Si se llenó, t_fin es el momento EXACTO en que llegó a 0%
             t_fin = df_lleno["Fecha_Hora_Extraccion"].iloc[0]
             hora_cierre_str = t_fin.strftime("%d/%m %H:%M")
         else:
-            # Si sigue abierto, t_fin es la última lectura de la telemetría
             t_fin = df_g["Fecha_Hora_Extraccion"].iloc[-1]
             hora_cierre_str = "Aún Disponible"
 
-        # Tiempo activo hasta que se agotó (o hasta la última lectura)
         horas_activas = max(0.1, calcular_horas_activas_inscripcion(t_inicio, t_fin))
         velocidad_pct_hora = (cupo_inicial - cupo_actual) / horas_activas
 
@@ -283,9 +314,10 @@ def obtener_leaderboard_profesores():
         )
 
     df_res = pd.DataFrame(resultados)
-    if not df_res.empty:
-        df_res = df_res.sort_values("velocidad_raw", ascending=False).drop(
+    return (
+        df_res.sort_values("velocidad_raw", ascending=False).drop(
             columns=["velocidad_raw"]
         )
-
-    return df_res
+        if not df_res.empty
+        else pd.DataFrame()
+    )
