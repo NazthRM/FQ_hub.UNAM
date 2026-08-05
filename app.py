@@ -387,6 +387,8 @@ else:
             caracteres=filtro_car_gen,
         )
 
+        df_horarios_generador = enriquecer_con_ultimos_cupos(df_horarios_generador)
+
         st.divider()
 
         # 4. Selección de Asignaturas y Configuración Dinámica Componente por Componente
@@ -446,6 +448,13 @@ else:
                     configuracion_materias.append(
                         {"asignatura": asig, "tipos": list(tipos_materia)}
                     )
+
+        # Control de disponibilidad
+        solo_disponibles = st.toggle(
+            "🟢 Excluir grupos sin cupo disponible",
+            value=True,
+            help="Si está activo, el generador ignorará los grupos que tengan 0% de lugares según la última lectura en vivo.",
+        )
 
         # 5. Sistema de Veto de Profesores
         st.divider()
@@ -525,6 +534,7 @@ else:
                     hora_max_fin=h_max,
                     bloques_reservados=bloques_res,
                     profesores_vetados=profesores_vetados,
+                    solo_disponibles=solo_disponibles,
                 )
 
                 if not resultados:
@@ -535,12 +545,32 @@ else:
                     st.success(
                         f"¡Se encontraron {len(resultados)} combinaciones válidas!"
                     )
-                    for idx, res in enumerate(resultados):
-                        comb = res["combinacion"]
-                        with st.expander(
-                            f"Opción #{idx+1} | Score: {res['score_compatibilidad']} pts",
-                            expanded=(idx == 0),
-                        ):
+                for idx, res in enumerate(resultados):
+                    comb = res["combinacion"]
+                    with st.expander(
+                        f"📅 Opción #{idx+1} | Score: {res['score_compatibilidad']} pts",
+                        expanded=(idx == 0),
+                    ):
+                        # 1. Pestañas para elegir entre Vista Gráfica (Malla) y Vista Detallada (Tabla)
+                        tab_malla, tab_detalles = st.tabs(
+                            ["🗓️ Malla Semanal Visual", "📋 Lista de Grupos"]
+                        )
+
+                        with tab_malla:
+                            from solver import construir_malla_semanal
+
+                            df_malla = construir_malla_semanal(comb)
+
+                            if df_malla.empty:
+                                st.info(
+                                    "No hay horarios asignados para graficar en la malla."
+                                )
+                            else:
+                                st.dataframe(
+                                    df_malla, use_container_width=True, height=380
+                                )
+
+                        with tab_detalles:
                             df_comb = pd.DataFrame(comb)[
                                 [
                                     "Clave",
@@ -555,32 +585,34 @@ else:
                                 df_comb, use_container_width=True, hide_index=True
                             )
 
-                            ics_lines = [
-                                "BEGIN:VCALENDAR",
-                                "VERSION:2.0",
-                                "PRODID:-//FQ Hub UNAM//Generador Horarios//ES",
-                            ]
-                            for item in comb:
-                                ics_lines.append("BEGIN:VEVENT")
-                                ics_lines.append(
-                                    f"SUMMARY:{item['Asignatura']} (Gpo {item['Grupo']})"
-                                )
-                                ics_lines.append(
-                                    f"DESCRIPTION:Prof: {item['Profesores']} | Tipo: {item['Tipo']}"
-                                )
-                                ics_lines.append(
-                                    f"LOCATION:{item.get('Horarios', 'Sin aula')}"
-                                )
-                                ics_lines.append("END:VEVENT")
-                            ics_lines.append("END:VCALENDAR")
-
-                            st.download_button(
-                                label="Exportar esta combinación a mi Calendario (.ics)",
-                                data="\n".join(ics_lines),
-                                file_name=f"horario_fq_opcion_{idx+1}.ics",
-                                mime="text/calendar",
-                                key=f"btn_ics_{idx}",
+                        # 2. Botón opcional de exportación a .ics
+                        st.divider()
+                        ics_lines = [
+                            "BEGIN:VCALENDAR",
+                            "VERSION:2.0",
+                            "PRODID:-//FQ Hub UNAM//Generador Horarios//ES",
+                        ]
+                        for item in comb:
+                            ics_lines.append("BEGIN:VEVENT")
+                            ics_lines.append(
+                                f"SUMMARY:{item['Asignatura']} (Gpo {item['Grupo']})"
                             )
+                            ics_lines.append(
+                                f"DESCRIPTION:Prof: {item['Profesores']} | Tipo: {item['Tipo']}"
+                            )
+                            ics_lines.append(
+                                f"LOCATION:{item.get('Horarios', 'Sin aula')}"
+                            )
+                            ics_lines.append("END:VEVENT")
+                        ics_lines.append("END:VCALENDAR")
+
+                        st.download_button(
+                            label="📥 Exportar esta opción a mi Google Calendar / Apple (.ics)",
+                            data="\n".join(ics_lines),
+                            file_name=f"horario_fq_opcion_{idx+1}.ics",
+                            mime="text/calendar",
+                            key=f"btn_ics_{idx}",
+                        )
 
     # --- VISTA 4: LEADERBOARD DE PROFESORES ---
     elif vista_actual == "Leaderboard de Profesores":

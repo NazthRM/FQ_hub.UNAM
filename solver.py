@@ -77,6 +77,7 @@ def generar_combinaciones_horarios(
     hora_max_fin=None,
     bloques_reservados=None,
     profesores_vetados=None,
+    solo_disponibles: bool = True,
     max_resultados: int = 15,
 ):
     """Generador principal mediante Backtracking para encontrar combinaciones de horarios válidos."""
@@ -96,7 +97,23 @@ def generar_combinaciones_horarios(
 
     df_filtrado = df_horarios[~df_horarios["Profesores"].apply(tiene_vetado)].copy()
 
-    # 2. SISTEMA DE CUBETAS DIRIGIDO POR EL USUARIO (TEORÍA / LAB)
+    # 2. FILTRAR GRUPOS SIN CUPO EN VIVO
+    if solo_disponibles and "Cupo Actual" in df_filtrado.columns:
+
+        def tiene_cupo_disponible(cupo_str):
+            if pd.isna(cupo_str):
+                return True
+            val_limpio = str(cupo_str).replace("%", "").strip()
+            try:
+                return float(val_limpio) > 0.0
+            except ValueError:
+                return True
+
+        df_filtrado = df_filtrado[
+            df_filtrado["Cupo Actual"].apply(tiene_cupo_disponible)
+        ]
+
+    # 3. SISTEMA DE CUBETAS DIRIGIDO POR EL USUARIO (TEORÍA / LAB)
     grupos_por_materia = []
 
     for config in configuracion_materias:
