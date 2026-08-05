@@ -11,6 +11,7 @@ from data_loader import (
 )
 from predictor import proyectar_supervivencia_hibrida
 from tramites_calendar import cargar_contenido_ics, obtener_df_tramites
+from solver import construir_malla_semanal, generar_combinaciones_horarios
 
 st.set_page_config(page_title="FQ Hub", layout="wide", page_icon="🧪")
 
@@ -451,7 +452,7 @@ else:
 
         # Control de disponibilidad
         solo_disponibles = st.toggle(
-            "🟢 Excluir grupos sin cupo disponible",
+            "Excluir grupos sin cupo disponible",
             value=True,
             help="Si está activo, el generador ignorará los grupos que tengan 0% de lugares según la última lectura en vivo.",
         )
@@ -466,7 +467,7 @@ else:
                     lista_profesores_cruda.add(p.strip())
 
         profesores_vetados = st.multiselect(
-            "⛔ Vetar Profesores (Excluir de mis horarios):",
+            "Vetar Profesores (Excluir de mis horarios):",
             options=sorted(list(lista_profesores_cruda)),
             key="gen_veto_profes",
             help="El generador ignorará cualquier combinación que incluya a estos profesores.",
