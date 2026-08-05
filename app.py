@@ -6,8 +6,10 @@ from data_loader import (
     cargar_historico_en_vivo,
     cargar_horarios_indexados,
     obtener_datos_fusionados,
+    obtener_leaderboard_profesores,
 )
 from predictor import proyectar_supervivencia_hibrida
+from tramites_calendar import cargar_contenido_ics, obtener_df_tramites
 
 st.set_page_config(page_title="FQ Hub", layout="wide", page_icon="🧪")
 
@@ -26,10 +28,17 @@ if "carrera_seleccionada" not in st.session_state:
 # 1. BARRA LATERAL
 # ==========================================
 with st.sidebar:
-    st.title("Hub de herramientas")
+    st.title("Hub de Herramientas")
     st.divider()
     vista_actual = st.radio(
-        "¿Qué es lo que deseas hacer?", ["Buscador de Grupos", "Predicción de cupo"]
+        "¿De que tipo es tu emergencia?",
+        [
+            "Buscador de Grupos",
+            "Predicción de Cupo",
+            "Generador de Horarios",
+            "Leaderboard de Profesores",
+            "Trámites FQ",
+        ],
     )
     st.divider()
     st.metric(label="Grupos guardados", value=len(st.session_state.grupos_guardados))
@@ -232,7 +241,7 @@ else:
                 .strftime("%Y-%m-%d %H:%M:%S")
             )
             st.caption(
-                f"🟢 **Telemetría en vivo conectada** | Última lectura capturada: `{ultima_lectura}`"
+                f"**Telemetría en vivo conectada** | Última lectura capturada: `{ultima_lectura}`"
             )
         else:
             st.caption("🟡 **Conectando con el repositorio de datos...**")
@@ -292,7 +301,7 @@ else:
             )
 
             st.divider()
-            st.markdown("### 🎯 Mi Turno de Inscripción")
+            st.markdown("### Turno de Inscripción")
             st.caption(
                 "Ingresa la fecha y hora exacta de tu turno para estimar si alcanzarás lugar."
             )
@@ -321,13 +330,13 @@ else:
                 )
 
             if st.button(
-                "🔮 Calcular probabilidad de cupo",
+                "Calcular probabilidad de cupo",
                 type="primary",
                 use_container_width=True,
             ):
                 fecha_turno_dt = datetime.datetime.combine(dia_turno, hora_turno)
                 st.write(
-                    f"### 📊 Proyección al {fecha_turno_dt.strftime('%d/%m/%Y %H:%M hrs')}"
+                    f"### Proyección al {fecha_turno_dt.strftime('%d/%m/%Y %H:%M hrs')}"
                 )
 
                 for _, materia in df_guardados.iterrows():
@@ -357,13 +366,13 @@ else:
 
                         tendencia_str = prediccion["tendencia"]
                         if "Acelerando" in tendencia_str:
-                            c3.error(f"⚠️ {tendencia_str}")
+                            c3.error(f" {tendencia_str}")
                         elif "Desacelerando" in tendencia_str:
-                            c3.info(f"ℹ️ {tendencia_str}")
+                            c3.info(f" {tendencia_str}")
                         else:
-                            c3.success(f"✅ {tendencia_str}")
+                            c3.success(f" {tendencia_str}")
 
-                        # ✅ CÓDIGO CORREGIDO Y SEGURO:
+                        # CÓDIGO CORREGIDO Y SEGURO:
                         factores = prediccion.get("factores", {})
                         alpha_c = factores.get("alpha_carreras", 1.0)
                         alpha_p = factores.get("alpha_presion", 1.0)
@@ -380,3 +389,124 @@ else:
             if st.button("Limpiar todos los grupos guardados", type="secondary"):
                 st.session_state.grupos_guardados.clear()
                 st.rerun()
+
+        # --- VISTA 3: GENERADOR DE HORARIOS (SOLVER) ---
+    elif vista_actual == "Generador de Horarios":
+        st.subheader("Generador Inteligente de Horarios")
+        st.caption(
+            "Selecciona tus asignaturas objetivo y define tus restricciones de tiempo."
+        )
+
+        materias_disponibles = sorted(df_horarios["Asignatura"].unique())
+        asig_elegidas = st.multiselect(
+            "1. Selecciona las Asignaturas Objetivo:", options=materias_disponibles
+        )
+
+        with st.expander("Restricciones de Tiempo y Bloques Reservados (Opcional)"):
+            c1, c2 = st.columns(2)
+            with c1:
+                h_min = st.time_input(
+                    "Hora mínima de entrada:", value=datetime.time(7, 0)
+                )
+            with c2:
+                h_max = st.time_input(
+                    "Hora máxima de salida:", value=datetime.time(21, 0)
+                )
+
+            st.markdown("**Bloque Reservado Libre (Ej. Comida, Gym):**")
+            cb1, cb2, cb3 = st.columns(3)
+            with cb1:
+                dia_bloque = st.selectbox(
+                    "Día:", ["Todos", "Lun", "Mar", "Mie", "Jue", "Vie"]
+                )
+            with cb2:
+                h_ini_b = st.time_input("Inicio descanso:", value=datetime.time(13, 0))
+            with cb3:
+                h_fin_b = st.time_input("Fin descanso:", value=datetime.time(14, 0))
+
+        if st.button("Generar Mejores Horarios", type="primary"):
+
+            from solver import generar_combinaciones_horarios
+
+            bloques_res = []
+            if dia_bloque != "Todos":
+                bloques_res.append(
+                    {"dia": dia_bloque, "hora_inicio": h_ini_b, "hora_fin": h_fin_b}
+                )
+            else:
+                for d in ["Lun", "Mar", "Mie", "Jue", "Vie"]:
+                    bloques_res.append(
+                        {"dia": d, "hora_inicio": h_ini_b, "hora_fin": h_fin_b}
+                    )
+
+            resultados = generar_combinaciones_horarios(
+                materias_seleccionadas=asig_elegidas,
+                df_horarios=df_horarios,
+                grupos_guardados_set=st.session_state.grupos_guardados,
+                hora_min_inicio=h_min,
+                hora_max_fin=h_max,
+                bloques_reservados=bloques_res,
+            )
+
+            if not resultados:
+                st.error(
+                    "No se encontraron combinaciones compatibles sin empalmes para los filtros seleccionados."
+                )
+            else:
+                st.success(f"¡Se encontraron {len(resultados)} combinaciones válidas!")
+                for idx, res in enumerate(resultados):
+                    comb = res["combinacion"]
+                    with st.expander(
+                        f"Opción #{idx+1} | Score: {res['score_compatibilidad']} pts",
+                        expanded=(idx == 0),
+                    ):
+                        df_comb = pd.DataFrame(comb)[
+                            [
+                                "Clave",
+                                "Asignatura",
+                                "Grupo",
+                                "Tipo",
+                                "Profesores",
+                                "Horarios",
+                            ]
+                        ]
+                        st.dataframe(df_comb, use_container_width=True, hide_index=True)
+                        st.download_button(
+                            label="Exportar esta combinación a mi Calendario (.ics)",
+                            file_name=f"horario_fq_opcion_{idx+1}.ics",
+                            mime="text/calendar",
+                            key=f"btn_ics_{idx}",
+                        )
+
+    # --- VISTA 4: LEADERBOARD DE PROFESORES ---
+    elif vista_actual == "Leaderboard de Profesores 🏆":
+        from data_loader import obtener_leaderboard_profesores
+
+        st.subheader("🏆 Leaderboard de Profesores con Mayor Demanda")
+        st.caption("Monitoreo en tiempo real de la velocidad de agotamiento de cupos.")
+
+        df_leaderboard = obtener_leaderboard_profesores()
+        if df_leaderboard.empty:
+            st.info("Cargando datos de telemetría de profesores...")
+        else:
+            st.dataframe(df_leaderboard, use_container_width=True, hide_index=True)
+
+    # --- VISTA 5: DÍAS DE TRÁMITES FQ (CALENDARIO ESCOLAR) ---
+    elif vista_actual == "Días de Trámites FQ 📅":
+        st.subheader("📅 Calendario Oficial de Trámites FQ (Semestre 2027-1)")
+        st.caption(
+            "Consulta las fechas clave del semestre e impórtalas directamente a tu calendario personal."
+        )
+
+        st.download_button(
+            label="📥 Descargar e Inyectar Calendario de Trámites a mi Celular (.ics)",
+            data=cargar_contenido_ics(),  # <-- Carga dinámicamente el archivo .ics completo
+            file_name="Calendar_Tramites_FQ.ics",
+            mime="text/calendar",
+            type="primary",
+            use_container_width=True,
+        )
+
+        st.divider()
+        df_tramites = obtener_df_tramites()
+        st.dataframe(df_tramites, use_container_width=True, hide_index=True)

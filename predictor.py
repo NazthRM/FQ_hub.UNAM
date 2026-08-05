@@ -12,6 +12,15 @@ POBLACION_ALUMNOS = {
 }
 
 
+def calcular_horas_activas_inscripcion(t_inicio, t_ultimo):
+    """Calcula las horas transcurridas entre dos marcas de tiempo para determinar la velocidad del agotamiento de cupo."""
+    if pd.isna(t_inicio) or pd.isna(t_ultimo) or t_ultimo <= t_inicio:
+        return 0.1
+
+    horas = (t_ultimo - t_inicio).total_seconds() / 3600.0
+    return max(0.1, horas)
+
+
 def proyectar_supervivencia_hibrida(
     id_unico, fecha_turno, df_historico, df_horarios, df_relaciones
 ):
