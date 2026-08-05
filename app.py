@@ -334,17 +334,53 @@ else:
                 st.rerun()
 
     # --- VISTA 3: GENERADOR DE HORARIOS (SOLVER) ---
+    # --- VISTA 3: GENERADOR DE HORARIOS (SOLVER) ---
     elif vista_actual == "Generador de Horarios":
         st.subheader("Generador Inteligente de Horarios")
         st.caption(
             f"Mostrando materias para: **{st.session_state.carrera_seleccionada}**"
         )
 
-        # 🎯 FILTRAR DATAFRAME POR CARRERA PARA EL SOLVER (Evita cruces de materia 1602 vs 1507)
-        df_horarios_generador, _ = obtener_horarios_filtrados(
+        # 1. Obtener los semestres y caracteres disponibles para la carrera actual
+        _, rel_carrera_gen = obtener_horarios_filtrados(
             carrera=st.session_state.carrera_seleccionada
         )
+        semestres_disp_gen = sorted(
+            [s for s in rel_carrera_gen["Semestre"].unique() if s != "N/A"], key=int
+        )
+        caracteres_disp_gen = sorted(
+            [
+                c
+                for c in rel_carrera_gen["Caracter"].unique()
+                if c not in ["Desconocido", "Obligatoria"]
+            ]
+        )
+
+        # 2. Crear los selectores visuales
+        st.markdown("**Filtros opcionales para encontrar tus materias:**")
+        col_g1, col_g2 = st.columns(2)
+        with col_g1:
+            filtro_sem_gen = st.multiselect(
+                "Filtrar por Semestre:", options=semestres_disp_gen
+            )
+        with col_g2:
+            filtro_car_gen = st.multiselect(
+                "Filtrar por Carácter:", options=caracteres_disp_gen
+            )
+
+        # 3. Aplicar los filtros para reducir la lista de materias disponibles
+        df_horarios_generador, _ = obtener_horarios_filtrados(
+            carrera=st.session_state.carrera_seleccionada,
+            semestres=filtro_sem_gen,
+            caracteres=filtro_car_gen,
+        )
+
         materias_disponibles = sorted(df_horarios_generador["Asignatura"].unique())
+
+        st.divider()
+        asig_elegidas = st.multiselect(
+            "1. Selecciona las Asignaturas Objetivo:", options=materias_disponibles
+        )
 
         asig_elegidas = st.multiselect(
             "1. Selecciona las Asignaturas Objetivo:", options=materias_disponibles
