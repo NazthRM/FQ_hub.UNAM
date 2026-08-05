@@ -63,42 +63,45 @@ if df_horarios.empty or df_relaciones.empty:
         "No se pudo cargar la base de datos de horarios. Verifica la carpeta Documentación."
     )
 else:
+    # 🎯 SELECTOR GLOBAL DE CARRERA (Disponible para todas las herramientas)
+    st.markdown("**1. Plan de Estudios (Carrera):**")
+    carreras_lista = [
+        "Química Farmacéutico Biológica",
+        "Ingeniería Química",
+        "Química",
+        "Química de Alimentos",
+        "Ingeniería Química Metalúrgica",
+        "Química e Ingeniería en Materiales",
+    ]
+
+    cols_grid = st.columns(3) + st.columns(3)
+    for idx, c_nom in enumerate(carreras_lista):
+        activo = st.session_state.carrera_seleccionada == c_nom
+        if cols_grid[idx].button(
+            f"{'🟢' if activo else '⚪'} {c_nom}",
+            key=f"btn_carrera_global_{idx}",
+            use_container_width=True,
+        ):
+            st.session_state.carrera_seleccionada = c_nom
+            st.rerun()
+
+    todas_activo = st.session_state.carrera_seleccionada == "Todas las carreras"
+    if st.button(
+        f"{'🟢' if todas_activo else '⚪'} Mostrar todas las carreras",
+        key="btn_todas_carreras_global",
+        use_container_width=True,
+    ):
+        st.session_state.carrera_seleccionada = "Todas las carreras"
+        st.rerun()
+
+    st.divider()
+
     # --- VISTA 1: BUSCADOR DE GRUPOS ---
     if vista_actual == "Buscador de Grupos":
         st.subheader("Buscador de Materias y Grupos")
         st.caption(
             "Filtra por plan de estudios, semestre y carácter, o busca directamente."
         )
-
-        st.markdown("**1. Plan de Estudios (Carrera):**")
-        carreras_lista = [
-            "Química Farmacéutico Biológica",
-            "Ingeniería Química",
-            "Química",
-            "Química de Alimentos",
-            "Ingeniería Química Metalúrgica",
-            "Química e Ingeniería en Materiales",
-        ]
-
-        cols_grid = st.columns(3) + st.columns(3)
-        for idx, c_nom in enumerate(carreras_lista):
-            activo = st.session_state.carrera_seleccionada == c_nom
-            if cols_grid[idx].button(
-                f"{'🟢' if activo else '⚪'} {c_nom}",
-                key=f"btn_carrera_{idx}",
-                use_container_width=True,
-            ):
-                st.session_state.carrera_seleccionada = c_nom
-                st.rerun()
-
-        todas_activo = st.session_state.carrera_seleccionada == "Todas las carreras"
-        if st.button(
-            f"{'🟢' if todas_activo else '⚪'} Mostrar todas las carreras",
-            key="btn_todas_carreras",
-            use_container_width=True,
-        ):
-            st.session_state.carrera_seleccionada = "Todas las carreras"
-            st.rerun()
 
         # Obtener datos de semestres/caracteres válidos según carrera
         _, rel_carrera = obtener_horarios_filtrados(
@@ -115,15 +118,14 @@ else:
             ]
         )
 
-        st.divider()
         col_f1, col_f2 = st.columns(2)
         with col_f1:
             filtro_semestre = st.multiselect(
-                "2. Semestre:", options=semestres_disponibles
+                "2. Semestre:", options=semestres_disponibles, key="busc_semestre"
             )
         with col_f2:
             filtro_caracter = st.multiselect(
-                "3. Carácter:", options=caracteres_disponibles
+                "3. Carácter:", options=caracteres_disponibles, key="busc_caracter"
             )
 
         # Aplicar filtrado desde data_loader
@@ -138,10 +140,10 @@ else:
         col_t1, col_t2 = st.columns(2)
         with col_t1:
             filtro_materia = st.multiselect(
-                "4. Asignatura(s):", options=materias_disponibles
+                "4. Asignatura(s):", options=materias_disponibles, key="busc_materia"
             )
         with col_t2:
-            filtro_profesor = st.text_input("Buscar por Profesor:")
+            filtro_profesor = st.text_input("Buscar por Profesor:", key="busc_profesor")
 
         if filtro_materia:
             df_filtrado = df_filtrado[df_filtrado["Asignatura"].isin(filtro_materia)]
@@ -196,7 +198,11 @@ else:
                     key="editor_buscador",
                 )
 
-                if st.button("Actualizar mis grupos guardados", type="primary"):
+                if st.button(
+                    "Actualizar mis grupos guardados",
+                    type="primary",
+                    key="btn_actualizar_guardados",
+                ):
                     seleccionados = set(
                         df_editado[df_editado["Guardar"] == True]["ID Único"]
                     )
@@ -263,6 +269,7 @@ else:
                     value=datetime.date(2026, 8, 3),
                     min_value=datetime.date(2026, 8, 3),
                     max_value=datetime.date(2026, 8, 6),
+                    key="pred_dia",
                 )
 
             with col_h:
@@ -276,12 +283,14 @@ else:
                     "Hora asignada (CDMX):",
                     options=horas_opciones,
                     format_func=lambda t: t.strftime("%H:%M hrs"),
+                    key="pred_hora",
                 )
 
             if st.button(
                 "Calcular probabilidad de cupo",
                 type="primary",
                 use_container_width=True,
+                key="btn_calc_cupo",
             ):
                 fecha_turno_dt = datetime.datetime.combine(dia_turno, hora_turno)
                 st.write(
@@ -329,11 +338,14 @@ else:
                         )
 
             st.divider()
-            if st.button("Limpiar todos los grupos guardados", type="secondary"):
+            if st.button(
+                "Limpiar todos los grupos guardados",
+                type="secondary",
+                key="btn_limpiar_guardados",
+            ):
                 st.session_state.grupos_guardados.clear()
                 st.rerun()
 
-    # --- VISTA 3: GENERADOR DE HORARIOS (SOLVER) ---
     # --- VISTA 3: GENERADOR DE HORARIOS (SOLVER) ---
     elif vista_actual == "Generador de Horarios":
         st.subheader("Generador Inteligente de Horarios")
@@ -341,7 +353,7 @@ else:
             f"Mostrando materias para: **{st.session_state.carrera_seleccionada}**"
         )
 
-        # 1. Obtener los semestres y caracteres disponibles para la carrera actual
+        # 1. Obtener datos de semestres/caracteres válidos según carrera
         _, rel_carrera_gen = obtener_horarios_filtrados(
             carrera=st.session_state.carrera_seleccionada
         )
@@ -356,19 +368,19 @@ else:
             ]
         )
 
-        # 2. Crear los selectores visuales
-        st.markdown("**Filtros opcionales para encontrar tus materias:**")
+        # 2. Filtros intermedios para no saturar el multiselect
+        st.markdown("**Filtros opcionales para acortar la lista de asignaturas:**")
         col_g1, col_g2 = st.columns(2)
         with col_g1:
             filtro_sem_gen = st.multiselect(
-                "Filtrar por Semestre:", options=semestres_disp_gen
+                "Filtrar por Semestre:", options=semestres_disp_gen, key="gen_semestre"
             )
         with col_g2:
             filtro_car_gen = st.multiselect(
-                "Filtrar por Carácter:", options=caracteres_disp_gen
+                "Filtrar por Carácter:", options=caracteres_disp_gen, key="gen_caracter"
             )
 
-        # 3. Aplicar los filtros para reducir la lista de materias disponibles
+        # 3. Filtrar DataFrame por carrera, semestre y carácter
         df_horarios_generador, _ = obtener_horarios_filtrados(
             carrera=st.session_state.carrera_seleccionada,
             semestres=filtro_sem_gen,
@@ -377,38 +389,47 @@ else:
 
         materias_disponibles = sorted(df_horarios_generador["Asignatura"].unique())
 
-        st.divider()
         asig_elegidas = st.multiselect(
-            "1. Selecciona las Asignaturas Objetivo:", options=materias_disponibles
-        )
-
-        asig_elegidas = st.multiselect(
-            "1. Selecciona las Asignaturas Objetivo:", options=materias_disponibles
+            "Selecciona las Asignaturas Objetivo:",
+            options=materias_disponibles,
+            key="gen_asig_objetivo",
         )
 
         with st.expander("Restricciones de Tiempo y Bloques Reservados (Opcional)"):
             c1, c2 = st.columns(2)
             with c1:
                 h_min = st.time_input(
-                    "Hora mínima de entrada:", value=datetime.time(7, 0)
+                    "Hora mínima de entrada:",
+                    value=datetime.time(7, 0),
+                    key="gen_h_min",
                 )
             with c2:
                 h_max = st.time_input(
-                    "Hora máxima de salida:", value=datetime.time(21, 0)
+                    "Hora máxima de salida:",
+                    value=datetime.time(21, 0),
+                    key="gen_h_max",
                 )
 
             st.markdown("**Bloque Reservado Libre (Ej. Comida, Gym):**")
             cb1, cb2, cb3 = st.columns(3)
             with cb1:
                 dia_bloque = st.selectbox(
-                    "Día:", ["Todos", "Lun", "Mar", "Mie", "Jue", "Vie"]
+                    "Día:",
+                    ["Todos", "Lun", "Mar", "Mie", "Jue", "Vie"],
+                    key="gen_dia_bloque",
                 )
             with cb2:
-                h_ini_b = st.time_input("Inicio descanso:", value=datetime.time(13, 0))
+                h_ini_b = st.time_input(
+                    "Inicio descanso:", value=datetime.time(13, 0), key="gen_h_ini_b"
+                )
             with cb3:
-                h_fin_b = st.time_input("Fin descanso:", value=datetime.time(14, 0))
+                h_fin_b = st.time_input(
+                    "Fin descanso:", value=datetime.time(14, 0), key="gen_h_fin_b"
+                )
 
-        if st.button("Generar Mejores Horarios", type="primary"):
+        if st.button(
+            "Generar Mejores Horarios", type="primary", key="btn_generar_horarios"
+        ):
             from solver import generar_combinaciones_horarios
 
             bloques_res = (
@@ -420,7 +441,6 @@ else:
                 ]
             )
 
-            # Se pasa df_horarios_generador para buscar SÓLO en la carrera seleccionada
             resultados = generar_combinaciones_horarios(
                 materias_seleccionadas=asig_elegidas,
                 df_horarios=df_horarios_generador,
@@ -506,6 +526,7 @@ else:
             mime="text/calendar",
             type="primary",
             use_container_width=True,
+            key="btn_descarga_ics_tramites",
         )
 
         st.divider()
