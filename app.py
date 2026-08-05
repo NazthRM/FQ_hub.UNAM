@@ -479,10 +479,10 @@ else:
                         )
 
     # --- VISTA 4: LEADERBOARD DE PROFESORES ---
-    elif vista_actual == "Leaderboard de Profesores 🏆":
+    elif vista_actual == "Leaderboard de Profesores":
         from data_loader import obtener_leaderboard_profesores
 
-        st.subheader("🏆 Leaderboard de Profesores con Mayor Demanda")
+        st.subheader("Leaderboard de Profesores con Mayor Demanda")
         st.caption("Monitoreo en tiempo real de la velocidad de agotamiento de cupos.")
 
         df_leaderboard = obtener_leaderboard_profesores()
@@ -492,14 +492,14 @@ else:
             st.dataframe(df_leaderboard, use_container_width=True, hide_index=True)
 
     # --- VISTA 5: DÍAS DE TRÁMITES FQ (CALENDARIO ESCOLAR) ---
-    elif vista_actual == "Días de Trámites FQ 📅":
-        st.subheader("📅 Calendario Oficial de Trámites FQ (Semestre 2027-1)")
+    elif vista_actual == "Trámites FQ":
+        st.subheader("Calendario Oficial de Trámites FQ (Semestre 2027-1)")
         st.caption(
             "Consulta las fechas clave del semestre e impórtalas directamente a tu calendario personal."
         )
 
         st.download_button(
-            label="📥 Descargar e Inyectar Calendario de Trámites a mi Celular (.ics)",
+            label="Descargar e Inyectar Calendario de Trámites a mi Celular (.ics)",
             data=cargar_contenido_ics(),  # <-- Carga dinámicamente el archivo .ics completo
             file_name="Calendar_Tramites_FQ.ics",
             mime="text/calendar",
