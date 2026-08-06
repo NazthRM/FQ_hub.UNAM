@@ -266,7 +266,7 @@ def obtener_datos_fusionados():
     )
 
 
-@st.cache_data(ttl=300)
+# @st.cache_data(ttl=300)
 def obtener_leaderboard_profesores():
     from predictor import calcular_horas_activas_inscripcion
 
@@ -309,6 +309,7 @@ def obtener_leaderboard_profesores():
                 "Asignatura": grupo,
                 "Velocidad Agotamiento": f"{round(velocidad_pct_hora, 1)}% / hr",
                 "Hora de Cierre": hora_cierre_str,
+                "Cupo Actual": f"{cupo_actual}%",  # <--- ¡ESTA ES LA LÍNEA MÁGICA QUE FALTABA!
                 "velocidad_raw": velocidad_pct_hora,
             }
         )

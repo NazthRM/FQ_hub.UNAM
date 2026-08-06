@@ -31,8 +31,103 @@ if "carrera_seleccionada" not in st.session_state:
 # ==========================================
 with st.sidebar:
     st.title("Hub de Herramientas")
-    st.divider()
-    vista_actual = st.radio(
+
+    # Selector de Carrera en Grid 3x2
+    st.markdown("**Registro preciso:**")
+
+    # Diccionario para mapear las claves con los nombres completos
+    mapa_carreras = {
+        "QFB": "Química Farmacéutico Biológica",
+        "IQ": "Ingeniería Química",
+        "Q": "Química",
+        "QA": "Química de Alimentos",
+        "IQM": "Ingeniería Química Metalúrgica",
+        "QIM": "Química e Ingeniería en Materiales",
+    }
+
+    claves = list(mapa_carreras.keys())
+
+    # Generador del grid 3x2
+    for i in range(0, len(claves), 2):
+        col1, col2 = st.columns(2)
+        clave1 = claves[i]
+        clave2 = claves[i + 1]
+
+        # Botón Columna Izquierda
+        es_activa1 = st.session_state.carrera_seleccionada == mapa_carreras[clave1]
+        if col1.button(
+            clave1,
+            type="primary" if es_activa1 else "secondary",
+            use_container_width=True,
+            key=f"btn_sb_{clave1}",
+        ):
+            st.session_state.carrera_seleccionada = mapa_carreras[clave1]
+            st.rerun()
+
+        # Botón Columna Derecha
+        es_activa2 = st.session_state.carrera_seleccionada == mapa_carreras[clave2]
+        if col2.button(
+            clave2,
+            type="primary" if es_activa2 else "secondary",
+            use_container_width=True,
+            key=f"btn_sb_{clave2}",
+        ):
+            st.session_state.carrera_seleccionada = mapa_carreras[clave2]
+            st.rerun()
+
+    # Botón para mostrar todas
+    es_todas = st.session_state.carrera_seleccionada == "Todas las carreras"
+    if st.button(
+        "Todas",
+        type="primary" if es_todas else "secondary",
+        use_container_width=True,
+        key="btn_sb_todas",
+    ):
+        st.session_state.carrera_seleccionada = "Todas las carreras"
+        st.rerun()
+
+    # ==========================================
+    # 🔍 BUSCADOR GLOBAL EN SIDEBAR
+    # ==========================================
+
+    # 1. Obtener datos válidos según la carrera seleccionada
+    _, rel_carrera_sb = obtener_horarios_filtrados(
+        carrera=st.session_state.carrera_seleccionada
+    )
+    semestres_disp_sb = sorted(
+        [s for s in rel_carrera_sb["Semestre"].unique() if s != "N/A"], key=int
+    )
+    caracteres_disp_sb = sorted(
+        [
+            c
+            for c in rel_carrera_sb["Caracter"].unique()
+            if c not in ["Desconocido", "Obligatoria"]
+        ]
+    )
+
+    # 2. Filtros colapsables para ahorrar espacio visual
+    with st.expander("Filtros de Semestre y Carácter"):
+        st.multiselect("Semestre:", options=semestres_disp_sb, key="global_semestre")
+        st.multiselect("Carácter:", options=caracteres_disp_sb, key="global_caracter")
+
+    # 3. Filtrado intermedio para actualizar las materias disponibles en tiempo real
+    df_filtrado_sb, _ = obtener_horarios_filtrados(
+        carrera=st.session_state.carrera_seleccionada,
+        semestres=st.session_state.get("global_semestre", []),
+        caracteres=st.session_state.get("global_caracter", []),
+    )
+    materias_disponibles_sb = sorted(df_filtrado_sb["Asignatura"].unique())
+
+    # 4. Selector principal de asignaturas (El corazón de la app)
+    st.multiselect(
+        "Asignatura(s) Objetivo:",
+        options=materias_disponibles_sb,
+        key="global_asignaturas",
+        help="Las materias que elijas aquí se usarán en todas las herramientas.",
+    )
+
+    # Menú de navegación transformado a desplegable
+    vista_actual = st.selectbox(
         "¿De qué tipo es tu emergencia?",
         [
             "Buscador de Grupos",
@@ -42,6 +137,18 @@ with st.sidebar:
             "Trámites FQ",
         ],
     )
+
+    # Solo mostramos los filtros en las herramientas que buscan materias
+    if vista_actual in [
+        "Buscador de Grupos",
+        "Predicción de Cupo",
+        "Generador de Horarios",
+    ]:
+
+        # 5. Toggle opcional (Solo para Generador y Predictor)
+        if vista_actual in ["Predicción de Cupo", "Generador de Horarios"]:
+            st.toggle("Excluir grupos sin cupo", value=True, key="global_excluir_cupo")
+
     st.divider()
     st.metric(label="Grupos guardados", value=len(st.session_state.grupos_guardados))
 
@@ -64,90 +171,31 @@ if df_horarios.empty or df_relaciones.empty:
         "No se pudo cargar la base de datos de horarios. Verifica la carpeta Documentación."
     )
 else:
-    # 🎯 SELECTOR GLOBAL DE CARRERA (Disponible para todas las herramientas)
-    st.markdown("**1. Plan de Estudios (Carrera):**")
-    carreras_lista = [
-        "Química Farmacéutico Biológica",
-        "Ingeniería Química",
-        "Química",
-        "Química de Alimentos",
-        "Ingeniería Química Metalúrgica",
-        "Química e Ingeniería en Materiales",
-    ]
-
-    cols_grid = st.columns(3) + st.columns(3)
-    for idx, c_nom in enumerate(carreras_lista):
-        activo = st.session_state.carrera_seleccionada == c_nom
-        if cols_grid[idx].button(
-            f"{'🟢' if activo else '⚪'} {c_nom}",
-            key=f"btn_carrera_global_{idx}",
-            use_container_width=True,
-        ):
-            st.session_state.carrera_seleccionada = c_nom
-            st.rerun()
-
-    todas_activo = st.session_state.carrera_seleccionada == "Todas las carreras"
-    if st.button(
-        f"{'🟢' if todas_activo else '⚪'} Mostrar todas las carreras",
-        key="btn_todas_carreras_global",
-        use_container_width=True,
-    ):
-        st.session_state.carrera_seleccionada = "Todas las carreras"
-        st.rerun()
-
-    st.divider()
-
     # --- VISTA 1: BUSCADOR DE GRUPOS ---
     if vista_actual == "Buscador de Grupos":
         st.subheader("Buscador de Materias y Grupos")
         st.caption(
-            "Filtra por plan de estudios, semestre y carácter, o busca directamente."
+            "Los resultados se filtran automáticamente usando tus selecciones de la barra lateral."
         )
 
-        # Obtener datos de semestres/caracteres válidos según carrera
-        _, rel_carrera = obtener_horarios_filtrados(
-            carrera=st.session_state.carrera_seleccionada
-        )
-        semestres_disponibles = sorted(
-            [s for s in rel_carrera["Semestre"].unique() if s != "N/A"], key=int
-        )
-        caracteres_disponibles = sorted(
-            [
-                c
-                for c in rel_carrera["Caracter"].unique()
-                if c not in ["Desconocido", "Obligatoria"]
-            ]
-        )
+        # 1. Leemos lo que el usuario eligió en el Sidebar
+        asig_globales = st.session_state.get("global_asignaturas", [])
+        sem_globales = st.session_state.get("global_semestre", [])
+        car_globales = st.session_state.get("global_caracter", [])
 
-        col_f1, col_f2 = st.columns(2)
-        with col_f1:
-            filtro_semestre = st.multiselect(
-                "2. Semestre:", options=semestres_disponibles, key="busc_semestre"
-            )
-        with col_f2:
-            filtro_caracter = st.multiselect(
-                "3. Carácter:", options=caracteres_disponibles, key="busc_caracter"
-            )
+        col1, col2 = st.columns([3, 1])
+        with col2:
+            filtro_profesor = st.text_input("🔍 Buscar Profesor:", key="busc_profesor")
 
-        # Aplicar filtrado desde data_loader
+        # 2. Aplicamos los filtros globales
         df_filtrado, _ = obtener_horarios_filtrados(
             carrera=st.session_state.carrera_seleccionada,
-            semestres=filtro_semestre,
-            caracteres=filtro_caracter,
+            semestres=sem_globales,
+            caracteres=car_globales,
         )
 
-        materias_disponibles = sorted(df_filtrado["Asignatura"].unique())
-
-        col_t1, col_t2 = st.columns(2)
-        with col_t1:
-            filtro_materia = st.multiselect(
-                "4. Asignatura(s):", options=materias_disponibles, key="busc_materia"
-            )
-        with col_t2:
-            filtro_profesor = st.text_input("Buscar por Profesor:", key="busc_profesor")
-
-        if filtro_materia:
-            df_filtrado = df_filtrado[df_filtrado["Asignatura"].isin(filtro_materia)]
+        if asig_globales:
+            df_filtrado = df_filtrado[df_filtrado["Asignatura"].isin(asig_globales)]
         if filtro_profesor:
             df_filtrado = df_filtrado[
                 df_filtrado["Profesores"].str.contains(
@@ -155,19 +203,19 @@ else:
                 )
             ]
 
+        # 3. Decidimos si mostramos la tabla
         mostrar_tabla = True
         if (
-            st.session_state.carrera_seleccionada != "Todas las carreras"
-            and not filtro_materia
+            not asig_globales
             and not filtro_profesor
-            and not filtro_semestre
-            and not filtro_caracter
+            and not sem_globales
+            and not car_globales
+            and st.session_state.carrera_seleccionada != "Todas las carreras"
         ):
             mostrar_tabla = False
             st.info(
-                "Selecciona un semestre, carácter, asignatura o ingresa un nombre de profesor para desplegar los grupos."
+                "👈 Selecciona materias o filtros en la barra lateral para ver los grupos disponibles."
             )
-
         if mostrar_tabla:
             if df_filtrado.empty:
                 st.warning(
@@ -214,9 +262,10 @@ else:
                     st.session_state.grupos_guardados.update(seleccionados)
                     st.session_state.grupos_guardados.difference_update(deseleccionados)
 
-                    st.toast("Grupos guardados actualizados con éxito", icon="✅")
+                    st.toast("Grupos guardados actualizados con éxito")
                     st.rerun()
 
+    # --- VISTA 2: PREDICCIÓN DE CUPO ---
     # --- VISTA 2: PREDICCIÓN DE CUPO ---
     elif vista_actual == "Predicción de Cupo":
         st.subheader("Predicción de Cupo y Análisis de Horarios")
@@ -231,17 +280,38 @@ else:
                 f"**Telemetría en vivo conectada** | Última lectura capturada: `{ultima_lectura}`"
             )
         else:
-            st.caption("🟡 **Conectando con el repositorio de datos...**")
+            st.caption("**Conectando con el repositorio de datos...**")
 
-        if not st.session_state.grupos_guardados:
+        # 1. Leer asignaturas de la barra lateral
+        asig_globales = st.session_state.get("global_asignaturas", [])
+
+        # 2. Combinar grupos guardados explícitamente + TODOS los grupos de las materias seleccionadas
+        mask_guardados = df_horarios["ID Único"].isin(st.session_state.grupos_guardados)
+        mask_globales = df_horarios["Asignatura"].isin(asig_globales)
+
+        df_guardados = df_horarios[mask_guardados | mask_globales].copy()
+
+        if df_guardados.empty:
             st.info(
-                "Aún no has guardado ningún grupo. Utiliza el **Buscador de Grupos** para seleccionar materias."
+                "Selecciona Asignaturas en la barra lateral o guarda grupos específicos en el Buscador para ver la predicción."
             )
         else:
-            df_guardados = df_horarios[
-                df_horarios["ID Único"].isin(st.session_state.grupos_guardados)
-            ].copy()
             df_guardados = enriquecer_con_ultimos_cupos(df_guardados)
+
+            # 3. Conectar el Toggle de la barra lateral "Excluir grupos sin cupo"
+            if st.session_state.get("global_excluir_cupo", False):
+
+                def tiene_cupo(cupo_str):
+                    if pd.isna(cupo_str):
+                        return True
+                    try:
+                        return float(str(cupo_str).replace("%", "").strip()) > 0.0
+                    except:
+                        return True
+
+                df_guardados = df_guardados[
+                    df_guardados["Cupo Actual"].apply(tiene_cupo)
+                ]
 
             cols_resumen = [
                 "ID Único",
@@ -257,6 +327,7 @@ else:
                 df_guardados[cols_resumen], use_container_width=True, hide_index=True
             )
 
+            st.divider()
             st.divider()
             st.markdown("### Turno de Inscripción")
             st.caption(
@@ -309,7 +380,7 @@ else:
                     )
 
                     with st.expander(
-                        f"📌 {materia['Asignatura']} | Grupo {materia['Grupo']} ({materia['Tipo']})",
+                        f"{materia['Asignatura']} | Grupo {materia['Grupo']} ({materia['Tipo']})",
                         expanded=True,
                     ):
                         c1, c2, c3 = st.columns(3)
@@ -354,54 +425,18 @@ else:
             f"Mostrando materias para: **{st.session_state.carrera_seleccionada}**"
         )
 
-        # 1. Obtener datos de semestres/caracteres válidos según carrera
-        _, rel_carrera_gen = obtener_horarios_filtrados(
-            carrera=st.session_state.carrera_seleccionada
-        )
-        semestres_disp_gen = sorted(
-            [s for s in rel_carrera_gen["Semestre"].unique() if s != "N/A"], key=int
-        )
-        caracteres_disp_gen = sorted(
-            [
-                c
-                for c in rel_carrera_gen["Caracter"].unique()
-                if c not in ["Desconocido", "Obligatoria"]
-            ]
-        )
+        # 1. Leemos las asignaturas desde la barra lateral (¡Adiós selectores repetidos!)
+        asig_elegidas = st.session_state.get("global_asignaturas", [])
 
-        # 2. Filtros intermedios para no saturar el multiselect
-        st.markdown("**1. Filtros opcionales para acortar la lista de asignaturas:**")
-        col_g1, col_g2 = st.columns(2)
-        with col_g1:
-            filtro_sem_gen = st.multiselect(
-                "Filtrar por Semestre:", options=semestres_disp_gen, key="gen_semestre"
-            )
-        with col_g2:
-            filtro_car_gen = st.multiselect(
-                "Filtrar por Carácter:", options=caracteres_disp_gen, key="gen_caracter"
-            )
-
-        # 3. Filtrar DataFrame por carrera, semestre y carácter
+        # 2. Traemos la data usando también los filtros de la barra lateral
         df_horarios_generador, _ = obtener_horarios_filtrados(
             carrera=st.session_state.carrera_seleccionada,
-            semestres=filtro_sem_gen,
-            caracteres=filtro_car_gen,
+            semestres=st.session_state.get("global_semestre", []),
+            caracteres=st.session_state.get("global_caracter", []),
         )
-
         df_horarios_generador = enriquecer_con_ultimos_cupos(df_horarios_generador)
 
-        st.divider()
-
-        # 4. Selección de Asignaturas y Configuración Dinámica Componente por Componente
-        st.markdown("**2. Selección y Configuración de Asignaturas:**")
-        materias_disponibles = sorted(df_horarios_generador["Asignatura"].unique())
-
-        asig_elegidas = st.multiselect(
-            "Selecciona tus Asignaturas Objetivo:",
-            options=materias_disponibles,
-            key="gen_asig_objetivo",
-        )
-
+        st.markdown("**1. Configuración de Asignaturas (Teoría/Lab):**")
         configuracion_materias = []
 
         if asig_elegidas:
@@ -419,7 +454,7 @@ else:
 
             if materias_multi_tipo:
                 st.caption(
-                    "📌 **Ajuste Fino:** Desmarca los componentes que NO necesites cursar en este semestre."
+                    "**Ajuste Fino:** Desmarca los componentes que NO necesites cursar en este semestre."
                 )
 
                 for asig in materias_multi_tipo:
@@ -450,16 +485,9 @@ else:
                         {"asignatura": asig, "tipos": list(tipos_materia)}
                     )
 
-        # Control de disponibilidad
-        solo_disponibles = st.toggle(
-            "Excluir grupos sin cupo disponible",
-            value=True,
-            help="Si está activo, el generador ignorará los grupos que tengan 0% de lugares según la última lectura en vivo.",
-        )
-
         # 5. Sistema de Veto de Profesores
         st.divider()
-        st.markdown("**3. Control de Profesores (Veto):**")
+        st.markdown("**2. Control de Profesores (Veto):**")
         lista_profesores_cruda = set()
         for prof_str in df_horarios_generador["Profesores"].dropna():
             for p in str(prof_str).split(","):
@@ -508,13 +536,15 @@ else:
 
         # 7. Ejecución con Solver Refactorizado
         if st.button(
-            "🚀 Generar Mejores Horarios", type="primary", key="btn_generar_horarios"
+            "Generar Mejores Horarios", type="primary", key="btn_generar_horarios"
         ):
             if not asig_elegidas:
+                # Si no hay materias, mostramos advertencia y NO hacemos nada más
                 st.warning(
-                    "Debes seleccionar al menos una asignatura para generar combinaciones."
+                    "Debes seleccionar al menos una asignatura en la barra lateral para generar combinaciones."
                 )
             else:
+                # Si SÍ hay materias, calculamos todo adentro de este 'else'
                 from solver import generar_combinaciones_horarios
 
                 bloques_res = (
@@ -526,7 +556,8 @@ else:
                     ]
                 )
 
-                # Se envía configuracion_materias y profesores_vetados al solver
+                solo_disponibles = st.session_state.get("global_excluir_cupo", False)
+
                 resultados = generar_combinaciones_horarios(
                     configuracion_materias=configuracion_materias,
                     df_horarios=df_horarios_generador,
@@ -537,7 +568,6 @@ else:
                     profesores_vetados=profesores_vetados,
                     solo_disponibles=solo_disponibles,
                 )
-
                 if not resultados:
                     st.error(
                         "No se encontraron combinaciones compatibles sin empalmes. Prueba desmarcando profesores vetados o reduciendo bloques reservados."
@@ -608,7 +638,7 @@ else:
                         ics_lines.append("END:VCALENDAR")
 
                         st.download_button(
-                            label="📥 Exportar esta opción a mi Google Calendar / Apple (.ics)",
+                            label="Exportar esta opción a mi Google Calendar / Apple (.ics)",
                             data="\n".join(ics_lines),
                             file_name=f"horario_fq_opcion_{idx+1}.ics",
                             mime="text/calendar",
@@ -621,9 +651,75 @@ else:
         st.caption("Monitoreo en tiempo real de la velocidad de agotamiento de cupos.")
 
         df_leaderboard = obtener_leaderboard_profesores()
+
         if df_leaderboard.empty:
             st.info("Cargando datos de telemetría de profesores...")
         else:
+            # 1. Agregar columna de clasificación (Rank)
+            df_leaderboard = df_leaderboard.reset_index(drop=True)
+            df_leaderboard.insert(0, "🏆 Rank", df_leaderboard.index + 1)
+
+            if "Hora de Cierre" in df_leaderboard.columns:
+
+                def formato_hibrido(row):
+                    valor_cierre = str(row["Hora de Cierre"]).strip()
+
+                    # Si el backend mandó "Aún Disponible", o está en blanco
+                    if (
+                        valor_cierre == "Aún Disponible"
+                        or valor_cierre == ""
+                        or pd.isna(row["Hora de Cierre"])
+                    ):
+                        # Rescatamos el cupo actual de forma segura
+                        cupo = row.get("Cupo Actual", "")
+                        if pd.notna(cupo) and str(cupo).strip() != "":
+                            return f"Aún Disponible ({cupo})"
+                        return "Aún Disponible"
+                    else:
+                        # Limpiamos por si el backend ya mandaba la palabra "Cerró"
+                        valor_cierre = valor_cierre.replace("Cerró: ", "").strip()
+                        return f"Cerró: {valor_cierre}"
+
+                # Creamos la nueva columna combinada
+                df_leaderboard["Estado / Cierre"] = df_leaderboard.apply(
+                    formato_hibrido, axis=1
+                )
+
+                # Eliminamos las columnas viejas SIN causar errores
+                columnas_a_borrar = ["Hora de Cierre"]
+                if "Cupo Actual" in df_leaderboard.columns:
+                    columnas_a_borrar.append("Cupo Actual")
+
+                df_leaderboard = df_leaderboard.drop(columns=columnas_a_borrar)
+                columna_nombre = (
+                    "Profesor" if "Profesor" in df_leaderboard.columns else "Profesores"
+                )
+
+            # 2. Obtenemos la lista única de profesores disponibles
+            profesores_disponibles = sorted(
+                df_leaderboard[columna_nombre].dropna().unique()
+            )
+
+            # 3. Creamos el multiselect
+            profesores_seleccionados = st.multiselect(
+                "Filtrar por Profesor(es):",
+                options=profesores_disponibles,
+                key="busc_leaderboard_multi",
+                help="Puedes seleccionar uno o varios profesores para comparar su demanda.",
+            )
+
+            # 4. Filtramos la tabla si el usuario seleccionó a alguien
+            if profesores_seleccionados:
+                df_leaderboard = df_leaderboard[
+                    df_leaderboard[columna_nombre].isin(profesores_seleccionados)
+                ]
+
+                if df_leaderboard.empty:
+                    st.warning(
+                        "No se encontraron registros para los profesores seleccionados."
+                    )
+
+            # 3. Mostrar la tabla final
             st.dataframe(df_leaderboard, use_container_width=True, hide_index=True)
 
     # --- VISTA 5: DÍAS DE TRÁMITES FQ (CALENDARIO ESCOLAR) ---
