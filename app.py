@@ -130,11 +130,11 @@ with st.sidebar:
     vista_actual = st.selectbox(
         "¿De qué tipo es tu emergencia?",
         [
-            "Buscador de Grupos",
             "Predicción de Cupo",
             "Generador de Horarios",
             "Leaderboard de Profesores",
             "Trámites FQ",
+            "Buscador de Grupos",el buscador
         ],
     )
 
