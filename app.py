@@ -134,7 +134,7 @@ with st.sidebar:
             "Generador de Horarios",
             "Leaderboard de Profesores",
             "Trámites FQ",
-            "Buscador de Grupos",el buscador
+            "Buscador de Grupos",
         ],
     )
 
